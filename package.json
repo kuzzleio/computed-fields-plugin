@@ -1,7 +1,7 @@
 {
   "name": "kuzzle-plugin-template",
   "version": "1.0.0",
-  "description": "Kuzzle Plugin for basic document validation",
+  "description": "Kuzzle Plugin template",
   "main": "lib/index.js",
   "scripts": {
     "test": "npm run --silent lint && npm run --silent unit-test",
