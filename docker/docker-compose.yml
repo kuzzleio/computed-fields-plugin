@@ -1,17 +1,16 @@
-version: '2'
+version: '2.1'
 
 services:
   proxy:
-    image: kuzzleio/proxy:develop
+    image: kuzzleio/proxy${PROXY_DOCKER_TAG}
     ports:
       - "7511-7513:7511-7513"
 
   kuzzle:
-    build: kuzzle
+    image: kuzzleio/kuzzle${KUZZLE_DOCKER_TAG}
     volumes:
-      - "./refresh.sh:/tmp/refresh.sh"
       - "./pm2.json:/config/pm2.json"
-      - "..:/tmp/kuzzle-plugin-dev"
+      - "..:/var/app/plugins/enabled/${PLUGIN_NAME:-kuzzle_plugin_template}"
     depends_on:
       - proxy
       - redis
@@ -25,12 +24,7 @@ services:
       - kuzzle_services__memoryStorage__node__host=redis
       - kuzzle_services__proxyBroker__host=proxy
       - NODE_ENV=development
-      # If you change the plugin name in package.json, you must change it
-      # on the next 3 lines.
-      - kuzzle_plugins__kuzzle-plugin-template__path=/tmp/kuzzle-plugin-dev
-      - kuzzle_plugins__kuzzle-plugin-template__version=
-      - kuzzle_plugins__kuzzle-plugin-template__activated=true
-
+      - DEBUG=kuzzle:plugins
   redis:
     image: redis:3.2
 

@@ -1,9 +1,10 @@
 {
   "apps": [{
     "name": "KuzzleServer",
-    "script": "/tmp/refresh.sh",
-    "exec_interpreter": "bash",
-    "watch": ["lib", "config", "bin", "/tmp/kuzzle-plugin-dev"],
-    "ignore_watch" : ["node_modules", "/tmp/kuzzle-plugin-dev/.git"]
+    "script": "bin/kuzzle",
+    "args": ["start"],
+    "node_args": "--inspect",
+    "watch": ["lib", "config", "bin", "plugins/enabled"],
+    "ignore_watch" : ["node_modules", "plugins/enabled/**/.git"]
   }]
 }
