@@ -5,7 +5,7 @@ Here, you'll find the boilerplate to start coding a new [Kuzzle Core Plugin](htt
 * listen asynchronously, and perform operations that depend on data-related events;
 * listen synchronously, and approve, modify and/or reject data-related queries;
 * add a controller route to expose new actions to the API;
-* add an authentication strategy Kuzzle.
+* add an authentication strategy to Kuzzle.
 
 The boilerplate demonstrates each feature of a Core Plugin.
 
