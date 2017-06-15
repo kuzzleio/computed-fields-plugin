@@ -9,8 +9,6 @@ Here, you'll find the boilerplate to start coding a new [Kuzzle Core Plugin](htt
 
 The boilerplate demonstrates each feature of a Core Plugin.
 
-**Note.** The boilerplate code of authentication strategy is deactivated as it would override the current `local` strategy activated by default on Kuzzle. The code is present but commented in the `init` function. Use this code carefully to avoid breaking the `local` authentication strategy.
-
 ## Plugin development
 
 This plugin is useful only if you use it as the starting point of your work. It's a boilerplate.
