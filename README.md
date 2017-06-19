@@ -2,10 +2,10 @@
 
 Here, you'll find the boilerplate to start coding a new [Kuzzle Core Plugin](http://docs.kuzzle.io/guide/essentials/plugins/). A Core Plugin allows you to
 
-* [listen asynchronously]({{ site_base_path }}plugins-reference/plugins-features/adding-hooks), and perform operations that depend on data-related events;
-* [listen synchronously]({{ site_base_path }}plugins-reference/plugins-features/adding-pipes), and approve, modify and/or reject data-related queries;
-* [add a controller route]({{ site_base_path }}plugins-reference/plugins-features/adding-controllers) to expose new actions to the API;
-* [add an authentication strategy]({{ site_base_path }}plugins-reference/plugins-features/adding-authentication-strategy) to Kuzzle.
+* [listen asynchronously](http://docs.kuzzle.io/plugins-reference/plugins-features/adding-hooks), and perform operations that depend on data-related events;
+* [listen synchronously](http://docs.kuzzle.io/plugins-reference/plugins-features/adding-pipes), and approve, modify and/or reject data-related queries;
+* [add a controller route](http://docs.kuzzle.io/plugins-reference/plugins-features/adding-controllers) to expose new actions to the API;
+* [add an authentication strategy](http://docs.kuzzle.io/plugins-reference/plugins-features/adding-authentication-strategy) to Kuzzle.
 
 The boilerplate demonstrates each feature of a Core Plugin.
 
