@@ -4,13 +4,13 @@ services:
   proxy:
     image: kuzzleio/proxy${PROXY_DOCKER_TAG}
     ports:
-      - "7511-7513:7511-7513"
+      - "7512:75123"
 
   kuzzle:
     image: kuzzleio/kuzzle${KUZZLE_DOCKER_TAG}
     volumes:
       - "./pm2.json:/config/pm2.json"
-      - "..:/var/app/plugins/enabled/${PLUGIN_NAME:-kuzzle_plugin_template}"
+      - "..:/var/app/plugins/enabled/${PLUGIN_NAME:-kuzzle-core-plugin-boilerplate}"
     depends_on:
       - proxy
       - redis
@@ -25,8 +25,16 @@ services:
       - kuzzle_services__proxyBroker__host=proxy
       - NODE_ENV=development
       - DEBUG=kuzzle:plugins
+
   redis:
     image: redis:3.2
 
   elasticsearch:
-    image: elasticsearch:5.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.4.1
+    environment:
+      - cluster.name=kuzzle
+      # disable xpack
+      - xpack.security.enabled=false
+      - xpack.monitoring.enabled=false
+      - xpack.graph.enabled=false
+      - xpack.watcher.enabled=false

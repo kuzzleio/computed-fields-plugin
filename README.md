@@ -1,11 +1,11 @@
 # kuzzle-core-plugin-boilerplate
 
-Here, you'll find the boilerplate to start coding a new [Kuzzle Core Plugin](http://docs.kuzzle.io/guide/#plugin-types). A Core Plugin allows you to
+Here, you'll find the boilerplate to start coding a new [Kuzzle Core Plugin](http://docs.kuzzle.io/guide/essentials/plugins/). A Core Plugin allows you to
 
-* listen asynchronously, and perform operations that depend on data-related events;
-* listen synchronously, and approve, modify and/or reject data-related queries;
-* add a controller route to expose new actions to the API;
-* add an authentication strategy to Kuzzle.
+* [listen asynchronously]({{ site_base_path }}plugins-reference/plugins-features/adding-hooks), and perform operations that depend on data-related events;
+* [listen synchronously]({{ site_base_path }}plugins-reference/plugins-features/adding-pipes), and approve, modify and/or reject data-related queries;
+* [add a controller route]({{ site_base_path }}plugins-reference/plugins-features/adding-controllers) to expose new actions to the API;
+* [add an authentication strategy]({{ site_base_path }}plugins-reference/plugins-features/adding-authentication-strategy) to Kuzzle.
 
 The boilerplate demonstrates each feature of a Core Plugin.
 
@@ -17,9 +17,9 @@ This plugin is useful only if you use it as the starting point of your work. It'
 
 Clone this repository locally and make it accessible from the `plugins/enabled` directory relative to the Kuzzle installation directory. A common practice is to put the code of the plugin in `plugins/available` and create a symbolic link to it in `plugins/enabled`.
 
-**Note.** If you are running Kuzzle within a Docker container, you'll need to mount the local plugin installation directory as a volume in the container.
+**Note.** If you are running Kuzzle within a Docker container, you will need to mount the local plugin installation directory as a volume in the container.
 
-Please refer to the Guide for further instructions on [how to install Kuzzle plugins](http://docs.kuzzle.io/guide/#managing-plugins).
+Please refer to the Guide for further instructions on [how to install Kuzzle plugins](http://docs.kuzzle.io/guide/essentials/plugins/#managing-plugins).
 
 ### On a pristine Kuzzle stack
 
@@ -31,7 +31,7 @@ Clone this repository locally and type:
 $ docker-compose -f docker/docker-compose.yml up
 ```
 
-This will launch a Kuzzle stack mounting this plugin boilerplate in the Kuzzle Core watching the content of the plugin and restarting the Kuzzle Core each time a file is modified (which will make your changes instantly effective).
+This command will start a Kuzzle stack with this plugin enabled. To make development more confortable, a watcher will also be activated, restarting Kuzzle every time a modification is detected.
 
 #### Working on a different Kuzzle tag
 
