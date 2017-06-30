@@ -47,11 +47,45 @@ These environment variables enable you to specify any existing build tag availab
 
 **Note** do not forget the `:` before the tag.
 
-#### Customizing the plugin name
+#### Customizing the plugin instance name
 
 You may like to name your plugin differently than the name of this repo. To do so, rename the local directory of the repo and define the following environment variable before launching the development stack:
 
 ```bash
 $ export PLUGIN_NAME=my-awesome-plugin
 $ docker-compose -f docker/docker-compose.yml up
+```
+
+## `manifest.json` file
+
+`manifest.json` are here to describe usage of your plugin:
+
+```js
+{
+  /**
+   * This is metadata to describe your plugin
+   */
+  "name": "name-of-your-plugin",
+  "version": "2.3.1",
+
+ /**
+  * Define which core version this plugin is designed for.
+  * Use semver notation to born Kuzzle version this plugins supports
+  * - if set, and installation requirement is not meet, an error will be thrown and Kuzzle will not start
+  */
+  "kuzzleVersion": "^1.1.x",
+
+  /**
+   * Define if this plugin supports worker plugins (multi-threaded)
+   * Setting this to true allows users to set "threads" configuration
+   *
+   * /!\ warning: Threaded plugins will not be able to access:
+   *                - authentication strategies
+   *                - pipes events
+   *                - custom controllers
+   *
+   * @type {Boolean}
+   */
+  "threadable": true
+}
 ```
