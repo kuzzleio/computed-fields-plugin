@@ -1,11 +1,11 @@
 # kuzzle-core-plugin-boilerplate
 
-Here, you'll find the boilerplate to start coding a new [Kuzzle Core Plugin](http://docs.kuzzle.io/guide/#plugin-types). A Core Plugin allows you to
+Here, you'll find the boilerplate to start coding a new [Kuzzle Core Plugin](http://docs.kuzzle.io/guide/essentials/plugins/). A Core Plugin allows you to
 
-* listen asynchronously, and perform operations that depend on data-related events;
-* listen synchronously, and approve, modify and/or reject data-related queries;
-* add a controller route to expose new actions to the API;
-* add an authentication strategy to Kuzzle.
+* [listen asynchronously](http://docs.kuzzle.io/plugins-reference/plugins-features/adding-hooks), and perform operations that depend on data-related events;
+* [listen synchronously](http://docs.kuzzle.io/plugins-reference/plugins-features/adding-pipes), and approve, modify and/or reject data-related queries;
+* [add a controller route](http://docs.kuzzle.io/plugins-reference/plugins-features/adding-controllers) to expose new actions to the API;
+* [add an authentication strategy](http://docs.kuzzle.io/plugins-reference/plugins-features/adding-authentication-strategy) to Kuzzle.
 
 The boilerplate demonstrates each feature of a Core Plugin.
 
@@ -17,9 +17,9 @@ This plugin is useful only if you use it as the starting point of your work. It'
 
 Clone this repository locally and make it accessible from the `plugins/enabled` directory relative to the Kuzzle installation directory. A common practice is to put the code of the plugin in `plugins/available` and create a symbolic link to it in `plugins/enabled`.
 
-**Note.** If you are running Kuzzle within a Docker container, you'll need to mount the local plugin installation directory as a volume in the container.
+**Note.** If you are running Kuzzle within a Docker container, you will need to mount the local plugin installation directory as a volume in the container.
 
-Please refer to the Guide for further instructions on [how to install Kuzzle plugins](http://docs.kuzzle.io/guide/#managing-plugins).
+Please refer to the Guide for further instructions on [how to install Kuzzle plugins](http://docs.kuzzle.io/guide/essentials/plugins/#managing-plugins).
 
 ### On a pristine Kuzzle stack
 
@@ -31,7 +31,7 @@ Clone this repository locally and type:
 $ docker-compose -f docker/docker-compose.yml up
 ```
 
-This will launch a Kuzzle stack mounting this plugin boilerplate in the Kuzzle Core watching the content of the plugin and restarting the Kuzzle Core each time a file is modified (which will make your changes instantly effective).
+This command will start a Kuzzle stack with this plugin enabled. To make development more confortable, a watcher will also be activated, restarting Kuzzle every time a modification is detected.
 
 #### Working on a different Kuzzle tag
 
@@ -47,11 +47,45 @@ These environment variables enable you to specify any existing build tag availab
 
 **Note** do not forget the `:` before the tag.
 
-#### Customizing the plugin name
+#### Customizing the plugin instance name
 
 You may like to name your plugin differently than the name of this repo. To do so, rename the local directory of the repo and define the following environment variable before launching the development stack:
 
 ```bash
 $ export PLUGIN_NAME=my-awesome-plugin
 $ docker-compose -f docker/docker-compose.yml up
+```
+
+## `manifest.json` file
+
+`manifest.json` are here to describe usage of your plugin:
+
+```js
+{
+  /**
+   * This is metadata to describe your plugin
+   */
+  "name": "name-of-your-plugin",
+  "version": "2.3.1",
+
+ /**
+  * Define which core version this plugin is designed for.
+  * Use semver notation to born Kuzzle version this plugins supports
+  * - if set, and installation requirement is not meet, an error will be thrown and Kuzzle will not start
+  */
+  "kuzzleVersion": "^1.1.x",
+
+  /**
+   * Define if this plugin supports worker plugins (multi-threaded)
+   * Setting this to true allows users to set "threads" configuration
+   *
+   * /!\ warning: Threaded plugins will not be able to access:
+   *                - authentication strategies
+   *                - pipes events
+   *                - custom controllers
+   *
+   * @type {Boolean}
+   */
+  "threadable": true
+}
 ```
