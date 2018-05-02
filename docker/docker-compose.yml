@@ -1,28 +1,24 @@
-version: '2.1'
+version: '3'
 
 services:
-  proxy:
-    image: kuzzleio/proxy${PROXY_DOCKER_TAG}
-    ports:
-      - "7512:7512"
-
   kuzzle:
-    image: kuzzleio/kuzzle${KUZZLE_DOCKER_TAG}
+    image: kuzzleio/kuzzle
+    command: /run-dev.sh
     volumes:
+      - "./run-dev.sh:/run-dev.sh"
       - "./pm2.json:/config/pm2.json"
       - "..:/var/app/plugins/enabled/${PLUGIN_NAME:-kuzzle-core-plugin-boilerplate}"
     depends_on:
-      - proxy
       - redis
       - elasticsearch
     ports:
       - "8080:8080"
       - "9229:9229"
+      - "7512:7512"
     environment:
-      - kuzzle_services__db__host=elasticsearch
+      - kuzzle_services__db__client__host=http://elasticsearch:9200
       - kuzzle_services__internalCache__node__host=redis
       - kuzzle_services__memoryStorage__node__host=redis
-      - kuzzle_services__proxyBroker__host=proxy
       - NODE_ENV=development
       - DEBUG=kuzzle:plugins
 
