@@ -6,6 +6,7 @@ services:
     command: /run-dev.sh
     volumes:
       - "./run-dev.sh:/run-dev.sh"
+      - "./install-plugins.sh:/install-plugins.sh"
       - "./pm2.json:/config/pm2.json"
       - "..:/var/app/plugins/enabled/${PLUGIN_NAME:-kuzzle-core-plugin-boilerplate}"
     depends_on:
