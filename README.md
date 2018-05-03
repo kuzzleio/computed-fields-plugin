@@ -38,14 +38,11 @@ This command will start a Kuzzle stack with this plugin enabled. To make develop
 You can choose to work on the Kuzzle development branch by defining the following environment variables before launching `docker-compose`:
 
 ```bash
-$ export KUZZLE_DOCKER_TAG=:develop
-$ export PROXY_DOCKER_TAG=:develop
+$ export KUZZLE_DOCKER_TAG=1.2.13
 $ docker-compose -f docker/docker-compose.yml up
 ```
 
 These environment variables enable you to specify any existing build tag available on [Docker Hub](https://hub.docker.com/r/kuzzleio/kuzzle/tags/).
-
-**Note** do not forget the `:` before the tag.
 
 #### Customizing the plugin instance name
 
@@ -73,19 +70,6 @@ $ docker-compose -f docker/docker-compose.yml up
   * Use semver notation to born Kuzzle version this plugins supports
   * - if set, and installation requirement is not meet, an error will be thrown and Kuzzle will not start
   */
-  "kuzzleVersion": "^1.1.x",
-
-  /**
-   * Define if this plugin supports worker plugins (multi-threaded)
-   * Setting this to true allows users to set "threads" configuration
-   *
-   * /!\ warning: Threaded plugins will not be able to access:
-   *                - authentication strategies
-   *                - pipes events
-   *                - custom controllers
-   *
-   * @type {Boolean}
-   */
-  "threadable": true
+  "kuzzleVersion": "^1.2.x"
 }
 ```
