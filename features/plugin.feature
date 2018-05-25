@@ -1,5 +1,8 @@
 Feature: Core Plugin Boilerplate functional tests
 
+  Scenario: Connect
+    Given a kuzzle client
+
   Scenario: Hook events
     When I create the document "anti-citoyen-1"
     Then my hook function is called with action "create" on document "anti-citoyen-1"

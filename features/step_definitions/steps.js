@@ -12,11 +12,20 @@ const
     spawnSync
   } = require('child_process');
 
-let
-  kuzzle;
+let kuzzle;
+
+Given('a kuzzle client', function (callback) {
+  kuzzle = new Kuzzle('localhost', (error, result) => {
+    if (error) {
+      callback(error);
+    }
+
+    callback(error);
+  });
+});
 
 When(/I (create|update|delete) the document "([^"]*)"/, function (action, document, callback) {
-  const collection = this.kuzzle.collection('test-collection', 'test-index');
+  const collection = kuzzle.collection('test-collection', 'test-index');
   collection[`${action}DocumentPromise`].apply(collection, [document, { name: 'gordon', age: 42 }])
     .then(() => callback())
     .catch(error => callback(error));
@@ -76,7 +85,7 @@ When(/I create an user using my new "(\w+)" strategy/, function (strategy, callb
     }
   };
 
-  this.kuzzle
+  kuzzle
     .security
     .createUserPromise('hackerman', user, {})
     .then(() => callback())
@@ -89,16 +98,12 @@ Then(/I can login my user using my new "(\w+)" strategy/, function (strategy, ca
     password: 'itshackingtime'
   };
 
-  this.kuzzle
+  kuzzle
     .loginPromise(strategy, credentials)
     .then(() => callback())
     .catch(error => callback(error));
 });
 
-Then('I disconnect Kuzzle client', function (callback) {
-  this.kuzzle.disconnect();
-  callback();
-  // Cucumber never stop, if all tests pass we can safely exit the node process even if it is a little dirty :-*
-  console.log('All scenarios are successfull');
-  process.exit(0);
+Then('I disconnect Kuzzle client', function () {
+  kuzzle.disconnect();
 });

@@ -38,6 +38,7 @@ BeforeAll(function(callback) {
       .collection('test-collection', 'test-index')
       .truncatePromise()
       .then(() => callback())
-      .catch(err => callback(err));
+      .catch(err => callback(err))
+      .finally(() => kuzzle.disconnect());
   })
 });
