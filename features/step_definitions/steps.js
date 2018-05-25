@@ -16,10 +16,6 @@ let kuzzle;
 
 Given('a kuzzle client', function (callback) {
   kuzzle = new Kuzzle('localhost', (error, result) => {
-    if (error) {
-      callback(error);
-    }
-
     callback(error);
   });
 });
