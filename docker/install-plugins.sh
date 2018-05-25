@@ -11,8 +11,8 @@ for target in ${plugins_dir}/* ; do
     echo 'Installing dependencies for ' $(basename "$target")
     cd "$target"
     npm install --unsafe
-    find -L node_modules/.bin -type f -exec chmod 776 {} \;
-    find node_modules/ -type d -exec chmod 755 {} \;
+    # This is dirty but we are in a development environment, who care
+    chmod 777 node_modules/
     cd "$working_dir"
   fi
 done
