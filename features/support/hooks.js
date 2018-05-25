@@ -35,8 +35,8 @@ BeforeAll(function(callback) {
     }
 
     kuzzle
-      .collection('test-collection', 'test-index')
-      .truncatePromise()
+      .createIndexPromise('test-index')
+      .then(() => kuzzle.collection('test-collection', 'test-index').createPromise())
       .then(() => callback())
       .catch(err => callback(err))
       .finally(() => kuzzle.disconnect());

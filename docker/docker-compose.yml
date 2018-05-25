@@ -5,7 +5,6 @@ services:
     image: kuzzleio/kuzzle:${KUZZLE_DOCKER_TAG:-latest}
     command: /run-dev.sh
     volumes:
-      - "./default-mappings.json:/default-mappings.json"
       - "./run-dev.sh:/run-dev.sh"
       - "./install-plugins.sh:/install-plugins.sh"
       - "./pm2.json:/config/pm2.json"

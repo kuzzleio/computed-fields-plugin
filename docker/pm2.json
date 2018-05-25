@@ -2,7 +2,7 @@
   "apps": [{
     "name": "KuzzleServer",
     "script": "bin/kuzzle",
-    "args": ["start", "--mappings", "/default-mappings.json"],
+    "args": ["start"],
     "node_args": "--inspect",
     "watch": ["plugins/enabled"],
     "ignore_watch" : ["node_modules", "plugins/enabled/**/.git", "plugins/enabled/**/features/*"]
