@@ -1,22 +1,21 @@
 Feature: Core Plugin Boilerplate functional tests
 
   Scenario: Hook events
-    Given a Kuzzle stack running
-    When Kuzzle trigger an hooked event
-    Then my hook function is called
+    When I create the document "anti-citoyen-1"
+    Then my hook function is called with action "create" on document "anti-citoyen-1"
 
-#  Scenario: Pipe events
-#    Given a Kuzzle stack running
-#    When Kuzzle trigger a piped event
-#    Then my pipe function is called
+  Scenario: Pipe events
+    When I create the document "anti-citoyen-2"
+    When I delete the document "anti-citoyen-2"
+    Then my pipe function is called with action "delete" on document "anti-citoyen-2"
 
-#  Scenario: Controller action
-#    Given a Kuzzle stack running
-#    Given an exposed route to a controller action
-#    When I make a request to the route
-#    Then my controller action is called
+  Scenario: Controller action
+    When I request the route "/say-something/loin_de_tissa"
+    Then the action "myNewAction" of the controller "myNewController" with param "loin_de_tissa" is called
 
-#  Scenario: Authentication strategy
-#    Given a Kuzzle stack running
-#    When I try to login with my new strategy
-#    Then I can login with my new strategy
+  Scenario: Authentication strategy
+    When I create an user using my new "dummy" strategy
+    Then I can login my user using my new "dummy" strategy
+
+  Scenario: Disconnect
+    Then I disconnect Kuzzle client
