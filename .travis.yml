@@ -3,8 +3,6 @@ group: edge
 services:
   - docker
 
-on:
-  branch: kzl-51-add-automated-test
 
 env:
   global:
