@@ -5,9 +5,10 @@
   "description": "Kuzzle plugin boilerplate template",
   "main": "lib/index.js",
   "scripts": {
-    "test": "npm run --silent lint && npm run --silent unit-test",
+    "test": "npm run --silent lint && npm run --silent unit-testing && npm run functional-testing",
     "lint": "eslint --max-warnings=0 ./lib ./test",
-    "unit-test": "istanbul cover _mocha"
+    "functional-testing": "bash run-features.sh",
+    "unit-testing": "istanbul cover _mocha"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,8 @@
     "mocha": "^3.1.0",
     "should": "^11.1.0",
     "should-sinon": "0.0.5",
+    "cucumber": "^4.2.1",
+    "nexpect": "^0.5.0",
     "sinon": "^2.3.2"
   },
   "dependencies": {

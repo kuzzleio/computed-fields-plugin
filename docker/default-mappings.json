@@ -1,0 +1,10 @@
+{
+  "test-index": {
+    "test-collection": {
+      "properties": {
+        "name":   { "type": "text" },
+        "age":    { "type": "integer" }
+      }
+    }
+  }
+}
