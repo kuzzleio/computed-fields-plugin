@@ -3,6 +3,8 @@ group: edge
 services:
   - docker
 
+on:
+  branch: master
 
 env:
   global:
