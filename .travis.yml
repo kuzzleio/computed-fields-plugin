@@ -4,7 +4,7 @@ services:
   - docker
 
 on:
-  branch: master
+  branch: kzl-51-add-automated-test
 
 env:
   global:
