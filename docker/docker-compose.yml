@@ -14,7 +14,6 @@ services:
       - redis
       - elasticsearch
     ports:
-      - "8080:8080"
       - "9229:9229"
       - "7512:7512"
     environment:
@@ -29,8 +28,6 @@ services:
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:5.4.1
-    ports:
-      - "9200:9200"
     environment:
       - cluster.name=kuzzle
       # disable xpack
