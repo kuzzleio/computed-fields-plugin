@@ -12,19 +12,16 @@ const
     spawnSync
   } = require('child_process');
 
-let kuzzle, kuzzleHost, kuzzlePort;
+let kuzzle;
 
-Given(/a running instance of Kuzzle on "([^"]*)":"([^"]*)" with a client connected/, function (host, port, callback) {
-  kuzzleHost = process.env.KUZZLE_HOST || host;
-  kuzzlePort = process.env.KUZZLE_PORT || port;
-
-  kuzzle = new Kuzzle(kuzzleHost, { port: kuzzlePort }, (error, result) => {
+Given(/a running instance of Kuzzle with a client connected/, function (callback) {
+  this.kuzzle = new Kuzzle(this.host, { port: this.port }, (error, result) => {
     callback(error);
   });
 });
 
 When(/I (create|update|delete) the document "([^"]*)"/, function (action, document, callback) {
-  const collection = kuzzle.collection('test-collection', 'test-index');
+  const collection = this.kuzzle.collection('test-collection', 'test-index');
   collection[`${action}DocumentPromise`].apply(collection, [document, { name: 'gordon', age: 42 }])
     .then(() => callback())
     .catch(error => callback(error));
@@ -44,7 +41,7 @@ Then(/I should encounter the log "([^"]*)"/, function (expectedLog, callback) {
 });
 
 When(/I request the route "([^"]*)"/, function (route, callback) {
-  const url = `http://${kuzzleHost}:${kuzzlePort}/_plugin/kuzzle-core-plugin-boilerplate${route}`;
+  const url = `http://${this.host}:${this.port}/_plugin/kuzzle-core-plugin-boilerplate${route}`;
   const curl = spawnSync('curl', [url]);
 
   if (curl.status === 0) {
@@ -67,7 +64,7 @@ When(/I create an user using my new "(\w+)" strategy/, function (strategy, callb
     }
   };
 
-  kuzzle
+  this.kuzzle
     .security
     .createUserPromise('hackerman', user, {})
     .then(() => callback())
@@ -80,12 +77,16 @@ Then(/I can login my user using my new "(\w+)" strategy/, function (strategy, ca
     password: 'itshackingtime'
   };
 
-  kuzzle
+  this.kuzzle
     .loginPromise(strategy, credentials)
     .then(() => callback())
     .catch(error => callback(error));
 });
 
-Then('I disconnect Kuzzle client', function () {
-  kuzzle.disconnect();
+Then('I am successfully logged in', function (callback) {
+  if (this.kuzzle.getJwtToken()) {
+    callback();
+  } else {
+    callback(new Error('User not loggued in (JWT Token not present)'));
+  }
 });
