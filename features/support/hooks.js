@@ -7,6 +7,9 @@ const
     spawnSync
   } = require('child_process');
 
+  const
+    kuzzleHost = process.env.KUZZLE_HOST || 'localhost',
+    kuzzlePort = process.env.KUZZLE_PORT || 7512;
 
 BeforeAll(function(callback) {
   let maxTries = 10;
@@ -14,7 +17,7 @@ BeforeAll(function(callback) {
   let curl;
 
   while (! connected && maxTries > 0) {
-    curl = spawnSync('curl', ['localhost:7512']);
+    curl = spawnSync('curl', [`${kuzzleHost}:${kuzzlePort}`]);
 
     if (curl.status == 0) {
       connected = true;
@@ -29,14 +32,20 @@ BeforeAll(function(callback) {
     callback(new Error("Unable to start docker-compose stack"));
   }
 
-  const kuzzle = new Kuzzle('localhost', (error, result) => {
+  const kuzzle = new Kuzzle(kuzzleHost, { port: kuzzlePort }, (error, result) => {
     if (error) {
       callback(error);
     }
 
+    // kuzzle
+    //   .createIndexPromise('test-index')
+    //   .then(() => kuzzle.collection('test-collection', 'test-index').createPromise())
+    //   .then(() => callback())
+    //   .catch(err => callback(err))
+    //   .finally(() => kuzzle.disconnect());
     kuzzle
-      .createIndexPromise('test-index')
-      .then(() => kuzzle.collection('test-collection', 'test-index').createPromise())
+      .collection('test-collection', 'test-index')
+      .truncatePromise()
       .then(() => callback())
       .catch(err => callback(err))
       .finally(() => kuzzle.disconnect());

@@ -12,10 +12,13 @@ const
     spawnSync
   } = require('child_process');
 
-let kuzzle;
+let kuzzle, kuzzleHost, kuzzlePort;
 
-Given('a kuzzle client', function (callback) {
-  kuzzle = new Kuzzle('localhost', (error, result) => {
+Given(/a running instance of Kuzzle on "([^"]*)":"([^"]*)" with a client connected/, function (host, port, callback) {
+  kuzzleHost = process.env.KUZZLE_HOST || host;
+  kuzzlePort = process.env.KUZZLE_PORT || port;
+
+  kuzzle = new Kuzzle(kuzzleHost, { port: kuzzlePort }, (error, result) => {
     callback(error);
   });
 });
@@ -27,9 +30,7 @@ When(/I (create|update|delete) the document "([^"]*)"/, function (action, docume
     .catch(error => callback(error));
 });
 
-Then(/my (pipe|hook) function is called with action "(\w+)" on document "([^"]*)"/, function (type, action, document, callback) {
-  const expectedLog = `${type} action ${action} on document ${document}`;
-
+Then(/I should encounter the log "([^"]*)"/, function (expectedLog, callback) {
   nexpect
     .spawn('docker-compose -f ./docker/docker-compose.yml logs kuzzle')
     .wait(expectedLog, () => callback())
@@ -43,7 +44,7 @@ Then(/my (pipe|hook) function is called with action "(\w+)" on document "([^"]*)
 });
 
 When(/I request the route "([^"]*)"/, function (route, callback) {
-  const url = `http://localhost:7512/_plugin/kuzzle-core-plugin-boilerplate${route}`;
+  const url = `http://${kuzzleHost}:${kuzzlePort}/_plugin/kuzzle-core-plugin-boilerplate${route}`;
   const curl = spawnSync('curl', [url]);
 
   if (curl.status === 0) {
@@ -51,21 +52,6 @@ When(/I request the route "([^"]*)"/, function (route, callback) {
   } else {
     callback(new Error(`Can not reach Kuzzle: ${curl.stdout.toString()}`));
   }
-});
-
-Then(/the action "(\w+)" of the controller "(\w+)" with param "(\w+)" is called/, function (action, controller, param, callback) {
-  const expectedLog = `controller ${controller} action ${action} param ${param}`;
-
-  nexpect
-    .spawn('docker-compose -f ./docker/docker-compose.yml logs kuzzle')
-    .wait(expectedLog, () => callback())
-    .run(error => {
-      if (error) {
-        return callback(error);
-      }
-
-      return callback(new Error(`"${expectedLog}" not found in logs`));
-    });
 });
 
 When(/I create an user using my new "(\w+)" strategy/, function (strategy, callback) {
