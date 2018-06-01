@@ -36,13 +36,13 @@ BeforeAll(function(callback) {
     if (error) {
       callback(error);
     }
-
+     
     kuzzle
-      .collection('test-collection', 'test-index')
-      .truncatePromise()
-      .then(() => callback())
-      .catch(err => callback(err))
-      .finally(() => kuzzle.disconnect());
+     .createIndexPromise('test-index')
+     .then(() => kuzzle.collection('test-collection', 'test-index').createPromise())
+     .then(() => callback())
+     .catch(err => callback(err))
+     .finally(() => kuzzle.disconnect());
   })
 
   After(function (callback) {
