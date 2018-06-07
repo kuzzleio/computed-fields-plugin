@@ -13,7 +13,6 @@ services:
       - redis
       - elasticsearch
     ports:
-      - "8080:8080"
       - "9229:9229"
       - "7512:7512"
     environment:

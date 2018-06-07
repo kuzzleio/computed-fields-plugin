@@ -4,7 +4,7 @@
     "script": "bin/kuzzle",
     "args": ["start"],
     "node_args": "--inspect",
-    "watch": ["lib", "config", "bin", "plugins/enabled"],
-    "ignore_watch" : ["node_modules", "plugins/enabled/**/.git"]
+    "watch": ["plugins/enabled"],
+    "ignore_watch" : ["node_modules", "plugins/enabled/**/.git", "plugins/enabled/**/features/*"]
   }]
 }
