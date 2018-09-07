@@ -1,8 +1,8 @@
 {
-  "name": "kuzzle-core-plugin-boilerplate",
+  "name": "computed-fields",
   "author": "The Kuzzle Team <support@kuzzle.io>",
-  "version": "1.1.0",
-  "description": "Kuzzle plugin boilerplate template",
+  "version": "1.0.0",
+  "description": "Kuzzle plugin to create fields that are computed from other fields",
   "main": "lib/index.js",
   "scripts": {
     "test": "npm run --silent lint && npm run functional-testing",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kuzzleio/kuzzle-core-plugin-boilerplate.git"
+    "url": "git+https://github.com/kuzzleio/computed-fields-plugin.git"
   },
   "keywords": [
     "kuzzle",
@@ -21,9 +21,9 @@
   ],
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/kuzzleio/kuzzle-core-plugin-boilerplate/issues"
+    "url": "https://github.com/kuzzleio/computed-fields-plugin/issues"
   },
-  "homepage": "https://github.com/kuzzleio/kuzzle-core-plugin-boilerplate#readme",
+  "homepage": "https://github.com/kuzzleio/computed-fields-plugin#readme",
   "devDependencies": {
     "eslint": "^3.6.1",
     "istanbul": "^0.4.5",
