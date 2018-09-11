@@ -8,7 +8,7 @@ log () {
 
 elastic_host=${kuzzle_services__db__client__host:-http://elasticsearch:9200}
 
-/install-plugins.sh
+./install-plugins.sh
 
 log "Waiting for elasticsearch"
 while ! curl -f -s -o /dev/null "$elastic_host"
