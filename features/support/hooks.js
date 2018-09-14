@@ -1,25 +1,25 @@
-const
-  {
-    BeforeAll,
-    After
-  } = require('cucumber'),
-  Kuzzle = require('kuzzle-sdk'),
-  KWorld = require('./world'),
-  {
-    spawnSync
-  } = require('child_process');
+'use strict'
 
-BeforeAll(function(callback) {
+const
+  {BeforeAll, After} = require('cucumber'),
+  {Kuzzle} = require('kuzzle-sdk'),
+  KuzzleWorld = require('./world'),
+  {spawnSync} = require('child_process');
+
+BeforeAll(() => {
   let maxTries = 10;
   let connected = false;
   let curl;
+  console.log('>>>>> BeforeALL <<<<<<')
 
-  const world = new KWorld();
+  console.log('this = ', this)
+
+  const world = new KuzzleWorld();
 
   while (! connected && maxTries > 0) {
     curl = spawnSync('curl', [`${world.host}:${world.port}`]);
 
-    if (curl.status == 0) {
+    if (curl.status === 0) {
       connected = true;
     } else {
       console.log(`[${maxTries}] Waiting for kuzzle..`);
@@ -29,25 +29,25 @@ BeforeAll(function(callback) {
   }
 
   if (! connected) {
-    callback(new Error("Unable to start docker-compose stack"));
+    return Promise.reject(new Error('Unable to start docker-compose stack'))
   }
 
-  const kuzzle = new Kuzzle(world.host, { port: world.port }, (error, result) => {
-    if (error) {
-      callback(error);
-    }
-     
-    kuzzle
-     .createIndexPromise('test-index')
-     .then(() => kuzzle.collection('test-collection', 'test-index').createPromise())
-     .then(() => callback())
-     .catch(err => callback(err))
-     .finally(() => kuzzle.disconnect());
-  })
+  const kuzzle = new Kuzzle('websocket', {host: world.host, port: world.port})
+  return kuzzle.connect()
+    .then(() => kuzzle.disconnect())
+})
 
-  After(function (callback) {
-    if (this.kuzzle && typeof this.kuzzle.disconnect == 'function') {
-      this.kuzzle.disconnect();
-    }
-  });
-});
+
+After(function() {
+  if (this.kuzzle) {
+    return this.kuzzle.query({
+      controller: 'admin',
+      action: 'resetDatabase'  
+    })
+    .then(()=>{
+      if (this.kuzzle && typeof this.kuzzle.disconnect === 'function') {
+        this.kuzzle.disconnect();
+      }
+    })
+  }
+})

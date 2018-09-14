@@ -16,8 +16,7 @@
   },
   "keywords": [
     "kuzzle",
-    "plugin",
-    "template"
+    "plugin"
   ],
   "license": "Apache-2.0",
   "bugs": {
@@ -32,9 +31,11 @@
     "should-sinon": "0.0.5",
     "cucumber": "^4.2.1",
     "nexpect": "^0.5.0",
-    "sinon": "^2.3.2"
+    "sinon": "^2.3.2",
+    "kuzzle-sdk": "git+https://github.com/kuzzleio/sdk-javascript#6-dev"
   },
   "dependencies": {
+    "lodash": "^4.17.11",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0"
   }
