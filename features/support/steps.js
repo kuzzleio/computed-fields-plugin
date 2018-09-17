@@ -146,6 +146,13 @@ Then('the computed fields for document {string} contains:', function (id, cfValu
   }
 })
 
+Then('the computed fields for document {string} doesn\'t contain:', function (id, cfValue) {
+  let cfKey = Object.keys(JSON.parse(cfValue))[0] // we expect cfValue from scenario to have only one key
+  if (this.documents[id]._computedFields && Object.keys(this.documents[id]._computedFields).includes(cfKey)) {
+    return Promise.reject(`The document computed fields is expected not to have the following field: ${cfKey}`)
+  }
+})
+
 When('I replace the document with id {string} from index {string} and collection {string} with:', function (id, index, collection, document) {
   return this.kuzzle.document.replace(index, collection, id, JSON.parse(document))
 })

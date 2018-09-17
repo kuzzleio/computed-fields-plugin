@@ -79,8 +79,8 @@ Feature: Computed Fields Plugin: Computed fields management
       }
       """
     When I list the computed fields
-    Then the list contains computed field "A"
-    And the list doesn't contain computed field "B"
+    Then the list contains computed field "B"
+    And the list doesn't contain computed field "A"
 
   Scenario Outline: A computed field shall be uniquelly identified by the tuple (index, collection, name)
     Given a running instance of Kuzzle

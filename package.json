@@ -24,15 +24,16 @@
   },
   "homepage": "https://github.com/kuzzleio/computed-fields-plugin#readme",
   "devDependencies": {
+    "cucumber": "^4.2.1",
+    "cucumber-html-reporter": "^4.0.4",
     "eslint": "^3.6.1",
     "istanbul": "^0.4.5",
+    "kuzzle-sdk": "git+https://github.com/kuzzleio/sdk-javascript#6-dev",
     "mocha": "^3.1.0",
+    "nexpect": "^0.5.0",
     "should": "^11.1.0",
     "should-sinon": "0.0.5",
-    "cucumber": "^4.2.1",
-    "nexpect": "^0.5.0",
-    "sinon": "^2.3.2",
-    "kuzzle-sdk": "git+https://github.com/kuzzleio/sdk-javascript#6-dev"
+    "sinon": "^2.3.2"
   },
   "dependencies": {
     "lodash": "^4.17.11",
