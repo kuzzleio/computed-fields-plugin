@@ -5,19 +5,48 @@ const
   {Given, When, Then, And, Before} = require('cucumber'),
   {Kuzzle} = require('kuzzle-sdk')
 
-Before(() => {
-})
-
-Given(/a running instance of Kuzzle/, function() {
+Before(function () {
   this.kuzzle = new Kuzzle('websocket', { host: this.host, port: this.port })
   return this.kuzzle.connect()
+  .then(()=> this.kuzzle.query({
+    // Reset kuzzle database
+      controller: 'admin',
+      action: 'resetDatabase',
+      refresh: "wait_for"
+    }))
+    .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
+/*    .then(()=>{
+      // reset computed field plugin configuration
+      return this.kuzzle.query(
+        {
+          controller: 'computed-fields/field',
+          action: 'list'
+        })
+        .then((r) => {
+          let p = []
+          for(let cf of r.result) {
+            p.push(this.kuzzle.query( {
+              controller: 'computed-fields/field',
+              action: 'delete',
+              _id: cf._id
+            }
+            ))
+          }
+          return Promise.all(p)
+        })
+    })*/
+})
+
+
+Given(/a running instance of Kuzzle/, function() {
+  return Promise.resolve()
 })
 
 Given('an index {string}', function (indexName) {
   this.indexName = indexName
   return this.kuzzle
     .index
-    .create(this.indexName)
+    .create(this.indexName, {refresh: "wait_for"})
 });
 
 Given('a collection {string} in {string}', function (collectionName, indexName) {
@@ -25,7 +54,7 @@ Given('a collection {string} in {string}', function (collectionName, indexName) 
 
   return this.kuzzle
     .collection
-    .create(indexName, collectionName)
+    .create(indexName, collectionName, {refresh: "wait_for"})
 });
 
 Given('I create a new computed field {string} as follow:', function (cfName, computedFieldCfg) {
@@ -100,4 +129,55 @@ Then('the computed field {string} has the following id: {string}', function (cfN
   return this.computedFieldIDs[cfName] === expectedID
 });
 
+Given('I create the following new document with id {string} in index {string} and collection {string}:', function (id, index, collection, document) {
+  return this.kuzzle.document.create(index, collection, id, JSON.parse(document))
+})
+
+When('I get the document with id {string} from index {string} and collection {string}', function (id, index, collection) {
+  return this.kuzzle.document.get(index, collection, id)
+  .then(r=>{
+    this.documents = {...this.documents, [id]: r._source} 
+  })
+})
+
+Then('the computed fields for document {string} contains:', function (id, cfValue) {
+  if (!_.isMatch(this.documents[id]._computedFields, JSON.parse(cfValue))) {
+    return Promise.reject(`The computed field doesn't match expected value: Got: ${JSON.stringify(this.documents[id]._computedFields)}`)
+  }
+})
+
+When('I replace the document with id {string} from index {string} and collection {string} with:', function (id, index, collection, document) {
+  return this.kuzzle.document.replace(index, collection, id, JSON.parse(document))
+})
+
+
+Given('I update the document with id {string} in index {string} and collection {string} {string} with {string}', 
+  function (id, index, collection, field, value) {
+    return this.kuzzle.document.update(index, collection, id, { [field]: value})
+})
+
+Given('I update the document with id {string} in index {string} and collection {string}:', function (id, index, collection, update) {
+  return this.kuzzle.document.update(index, collection, id, JSON.parse(update))
+})
+
+Given('I update the computed field {string} as follow:', function (cfName, computedFieldCfg) {
+  this.computedFields = {...this.computedFields, ...{[cfName]: JSON.parse(computedFieldCfg)}}
+  return this.kuzzle.query(
+    {
+      controller: 'computed-fields/field',
+      action: 'create',
+      body: this.computedFields[cfName]
+    })
+})
+
+
+Given('I recompute computed fields for index {string} and collection {string}', function (index, collection) {
+  return this.kuzzle.query(
+    {
+      controller: 'computed-fields/field',
+      action: 'recompute',
+      index,
+      collection
+    })
+})
 

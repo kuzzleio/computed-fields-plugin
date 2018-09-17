@@ -6,25 +6,21 @@ const
   KuzzleWorld = require('./world'),
   {spawnSync} = require('child_process');
 
-BeforeAll(() => {
+BeforeAll(function() {
   let maxTries = 10;
   let connected = false;
   let curl;
-  console.log('>>>>> BeforeALL <<<<<<')
-
-  console.log('this = ', this)
-
-  const world = new KuzzleWorld();
+  const world = new KuzzleWorld()
 
   while (! connected && maxTries > 0) {
-    curl = spawnSync('curl', [`${world.host}:${world.port}`]);
+    curl = spawnSync('curl', [`${world.host}:${world.port}`])
 
     if (curl.status === 0) {
-      connected = true;
+      connected = true
     } else {
-      console.log(`[${maxTries}] Waiting for kuzzle..`);
-      maxTries -= 1;
-      spawnSync('sleep', ['5']);
+      console.log(`[${maxTries}] Waiting for kuzzle..`)
+      maxTries -= 1
+      spawnSync('sleep', ['5'])
     }
   }
 
@@ -37,17 +33,8 @@ BeforeAll(() => {
     .then(() => kuzzle.disconnect())
 })
 
-
 After(function() {
-  if (this.kuzzle) {
-    return this.kuzzle.query({
-      controller: 'admin',
-      action: 'resetDatabase'  
-    })
-    .then(()=>{
-      if (this.kuzzle && typeof this.kuzzle.disconnect === 'function') {
-        this.kuzzle.disconnect();
-      }
-    })
+  if (this.kuzzle && typeof this.kuzzle.disconnect === 'function') {
+    this.kuzzle.disconnect();
   }
 })
