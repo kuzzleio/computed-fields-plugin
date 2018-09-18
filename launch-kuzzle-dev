@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# This script will launch Kuzzle stack in dev mode, watching for file modifications and
+# restarting automatically when you save your plugin code
+
+export PLUGIN_NAME=$(jq -r '.name' package.json)
+echo "Launching Kuzzle stack in dev mode for plugin: $PLUGIN_NAME"
+docker-compose -f docker/docker-compose.yml up

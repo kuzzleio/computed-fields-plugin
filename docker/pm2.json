@@ -5,6 +5,6 @@
     "args": ["start"],
     "node_args": "--inspect=0.0.0.0:9229",
     "watch": ["plugins/enabled"],
-    "ignore_watch" : ["plugins/enabled/*/report", "node_modules", "plugins/enabled/**/.git", "plugins/enabled/**/features/*"]
+    "ignore_watch" : ["plugins/enabled/*/report", "plugins/enabled/**/.git", "plugins/enabled/**/features/*"]
   }]
 }
