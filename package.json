@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/kuzzleio/computed-fields-plugin#readme",
   "devDependencies": {
-    "cucumber": "^4.2.1",
+    "cucumber": "^5.0.1",
     "cucumber-html-reporter": "^4.0.4",
     "eslint": "^3.6.1",
     "istanbul": "^0.4.5",
@@ -33,10 +33,10 @@
     "nexpect": "^0.5.0",
     "should": "^11.1.0",
     "should-sinon": "0.0.5",
+    "lodash": "^4.17.11",
     "sinon": "^2.3.2"
   },
   "dependencies": {
-    "lodash": "^4.17.11",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0"
   }
