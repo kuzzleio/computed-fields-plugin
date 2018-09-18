@@ -79,7 +79,7 @@ Then('the list doesn\'t contain computed field {string}', function (cfName) {
 
 When('I create a computed field {string} with name = {string}, index = {string} and collection = {string}',
    function (cfName, name, index, collection) {
-      let cfBody =  {name, index, collection, sourceFields: [], value: "A fake template"}
+      let cfBody =  {name, index, collection, value: "A fake template"}
       return this.kuzzle.query(
         {
           controller: 'computed-fields/field',

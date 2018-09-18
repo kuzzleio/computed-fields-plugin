@@ -10,7 +10,6 @@ Feature: Computed Fields Plugin: Computed fields management
       "name": "myComputedField",
       "index": "cf-test-index",
       "collection": "cf-test-collection",
-      "sourceFields": [ "forename", "age"],
       "value": "`my name is ${forename} and I'm ${age} years old`"
       }
       """
@@ -28,7 +27,6 @@ Feature: Computed Fields Plugin: Computed fields management
       "name": "myComputedField",
       "index": "cf-test-index",
       "collection": "cf-test-collection",
-      "sourceFields": [ "forename", "age"],
       "value": "`my name is ${forename} and I'm ${age} years old`"
       }
       """
@@ -46,7 +44,6 @@ Feature: Computed Fields Plugin: Computed fields management
   #       "name": "myComputedField",
   #       "index": "cf-test-index",
   #       "collection": "cf-test-collection",
-  #       "sourceFields": [ "forename", "age"]
   #       "value": "`my name is ${forename} and I'm ${age} years old`"
   #     }
   #     """
@@ -64,7 +61,6 @@ Feature: Computed Fields Plugin: Computed fields management
       "name": "myComputedField",
       "index": "cf-test-index",
       "collection": "cf-test-collection",
-      "sourceFields": [ "forename", "age"],
       "value": "`my name is ${forename} and I'm ${age} years old`"
       }
       """
@@ -74,7 +70,6 @@ Feature: Computed Fields Plugin: Computed fields management
       "name": "myComputedField",
       "index": "cf-test-index",
       "collection": "cf-test-collection",
-      "sourceFields": [ "age"],
       "value": "`I'm ${age} years old`"
       }
       """

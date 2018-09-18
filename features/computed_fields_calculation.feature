@@ -10,7 +10,6 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
       "name": "myComputedField",
       "index": "cf-test-index",
       "collection": "cf-test-collection",
-      "sourceFields": [ "forename", "age"],
       "value": "my name is ${forename} and I'm ${age} years old"
       }
       """
@@ -45,7 +44,6 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
       "name": "myComputedField",
       "index": "cf-test-index-1",
       "collection": "cf-test-collection",
-      "sourceFields": [ "forename", "instrument"],
       "value": "${forename} plays the ${instrument}"
       }
       """
@@ -55,7 +53,6 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
       "name": "myComputedField",
       "index": "cf-test-index-2",
       "collection": "cf-test-collection",
-      "sourceFields": [ "forename", "surname"],
       "value": "${forename} ${surname}"
       }
       """
@@ -91,7 +88,6 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
       "name": "myComputedField",
       "index": "cf-test-index",
       "collection": "cf-test-collection",
-      "sourceFields": [ "id.forename", "id.surname", "instrument", "band"],
       "value": "${id.forename} ${id.surname} plays the ${instrument} in ${band}"
       }
       """
@@ -126,7 +122,6 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
       "name": "myComputedField",
       "index": "cf-test-index",
       "collection": "cf-test-collection",
-      "sourceFields": [ "surname", "forename", "age"],
       "value": "My name is ${forename} ${surname} and I'm ${age} years old"
       }
       """
@@ -164,7 +159,6 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
       "name": "myComputedField",
       "index": "cf-test-index",
       "collection": "cf-test-collection",
-      "sourceFields": [ "surname", "forename", "age"],
       "value": "My name is ${forename} ${surname} and I'm ${age} years old"
       }
       """
@@ -200,7 +194,6 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
       "name": "myComputedField",
       "index": "cf-test-index",
       "collection": "cf-test-collection",
-      "sourceFields": [ "surname", "forename", "age"],
       "value": "My name is ${forename} ${surname} and I'm ${age} years old"
       }
       """
@@ -238,7 +231,6 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
       "name": "myComputedField",
       "index": "cf-test-index",
       "collection": "cf-test-collection",
-      "sourceFields": [ "surname", "forename", "age"],
       "value": "My name is ${forename} ${surname} and I'm ${age} years old"
       }
       """
@@ -257,7 +249,6 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
       "name": "myComputedField",
       "index": "cf-test-index",
       "collection": "cf-test-collection",
-      "sourceFields": [ "surname", "forename", "instrument"],
       "value": "My name is ${forename} ${surname} and I play the ${instrument}"
       }
       """
