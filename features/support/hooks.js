@@ -22,14 +22,14 @@ Before(function () {
     .then(() => {
       // reset computed field plugin configuration
       return this.kuzzle.query({
-        controller: 'computed-fields/field',
+        controller: 'computed-fields/computedFields',
         action: 'list'
       })
       .then((r) => {
         let p = []
         for (let cf of r.result) {
           p.push(this.kuzzle.query({
-            controller: 'computed-fields/field',
+            controller: 'computed-fields/computedFields',
             action: 'delete',
             _id: cf._id
           }))

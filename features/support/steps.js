@@ -28,7 +28,7 @@ Given('I create a new computed field {string} as follow:', function (cfName, com
   this.computedFields = {...this.computedFields, ...{[cfName]: JSON.parse(computedFieldCfg)}}
   return this.kuzzle.query(
     {
-      controller: 'computed-fields/field',
+      controller: 'computed-fields/computedFields',
       action: 'create',
       body: this.computedFields[cfName]
     });
@@ -37,7 +37,7 @@ Given('I create a new computed field {string} as follow:', function (cfName, com
 When('I list the computed fields', function () {
   return this.kuzzle.query(
     {
-      controller: 'computed-fields/field',
+      controller: 'computed-fields/computedFields',
       action: 'list'
     })
     .then((r) => {
@@ -63,7 +63,7 @@ Then('computed field {string} has the following id: {string}', function (cfName,
 Given('I delete the computed field with id: {string}', function (computedFieldID) {
   return this.kuzzle.query(
     {
-      controller: 'computed-fields/field',
+      controller: 'computed-fields/computedFields',
       action: 'delete',
       _id: computedFieldID
     })
@@ -82,7 +82,7 @@ When('I create a computed field {string} with name = {string}, index = {string} 
       let cfBody =  {name, index, collection, value: "A fake template"}
       return this.kuzzle.query(
         {
-          controller: 'computed-fields/field',
+          controller: 'computed-fields/computedFields',
           action: 'create',
           body: cfBody
         })
@@ -138,7 +138,7 @@ Given('I update the computed field {string} as follow:', function (cfName, compu
   this.computedFields = {...this.computedFields, ...{[cfName]: JSON.parse(computedFieldCfg)}}
   return this.kuzzle.query(
     {
-      controller: 'computed-fields/field',
+      controller: 'computed-fields/computedFields',
       action: 'create',
       body: this.computedFields[cfName]
     })
@@ -148,7 +148,7 @@ Given('I update the computed field {string} as follow:', function (cfName, compu
 Given('I recompute computed fields for index {string} and collection {string}', function (index, collection) {
   return this.kuzzle.query(
     {
-      controller: 'computed-fields/field',
+      controller: 'computed-fields/computedFields',
       action: 'recompute',
       index,
       collection
