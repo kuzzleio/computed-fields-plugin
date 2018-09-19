@@ -2,12 +2,14 @@
 
 <!-- TOC -->
 
-- [Purpose](#purpose)
-- [Installing the plugin](#installing-the-plugin)
-- [Computed fields management](#computed-fields-management)
-  - [Create a computed field](#create-a-computed-field)
-  - [List computed fields](#list-computed-fields)
-  - [Delete a computed field](#delete-a-computed-field)
+- [kuzzle computed-fields plugin](#kuzzle-computed-fields-plugin)
+  - [Purpose](#purpose)
+  - [Usage](#usage)
+  - [Installing the plugin](#installing-the-plugin)
+  - [Computed fields management](#computed-fields-management)
+    - [Create a computed field](#create-a-computed-field)
+    - [List computed fields](#list-computed-fields)
+    - [Delete a computed field](#delete-a-computed-field)
 
 <!-- /TOC -->
 
@@ -47,11 +49,22 @@ A computed field is applied to documents in a given `collection` and is defined 
 }
 ```
 
+## Usage
+
+| Field | Description |
+| -- | -- |
+| `name` | This is the name by which it will be represented in the documents.|
+| `index` | The `index` containing the document we want to apply the computed field to |
+| `collection` | The `collection` containing the document we want to apply the computed field to |
+| `value` | The computed field's `value` is a template string where you can insert document's field values using the `${fieldname}` syntax. Note that you are note limited to field at the root of the document, you can access insert nested property field using the classic `.` syntax: `${my.nested.field}` | 
+
+**Note:** To avoid any collision with documents fields, all computed fields are nested in `_computedFields` object.
+
 ## Installing the plugin
 
 Clone this repository locally and make it accessible from the `plugins/enabled` directory relative to the Kuzzle installation directory. A common practice is to put the code of the plugin in `plugins/available` and create a symbolic link to it in `plugins/enabled`.
 
-**Note.** If you are running Kuzzle within a Docker container, you will need to mount the local plugin installation directory as a volume in the container.
+**Note:** If you are running Kuzzle within a Docker container, you will need to mount the local plugin installation directory as a volume in the container.
 
 Please refer to the Guide for further instructions on [how to install Kuzzle plugins](http://docs.kuzzle.io/guide/essentials/plugins/#managing-plugins).
 
@@ -70,7 +83,7 @@ The controller has de following actions:
 
 ### Create a computed field
 
-#### http
+**http**
 
 You can create or update a computed field using a http `POST` on the route: `http+https://kuzzlehost:kuzzleport/computed-fields/`
 
@@ -120,7 +133,7 @@ Response:
 }
 ```
 
-#### Using Kuzzle JS SDK
+**Using Kuzzle JS SDK**
 
 Using the Kuzzle JS SDK, you can call controller actions using the `query`API:
 
@@ -149,7 +162,7 @@ The `list` action will return a array of computed fields.
 ]
 ```
 
-#### http
+**http**
 
 Do a `GET` on route `http+https://kuzzlehost:kuzzleport/computed-fields/` to get computed field list
 
@@ -181,7 +194,7 @@ Response:
 }
 ```
 
-#### Using Kuzzle JS SDK
+**Using Kuzzle JS SDK**
 
 Using the Kuzzle JS SDK, you can call controller actions using the `query`API:
 
@@ -212,7 +225,7 @@ Outputs:
 
 The `delete` action allow one to remove a computed field.
 
-#### http
+**http**
 
 Do a `POST` on route `http+https://kuzzlehost:kuzzleport/:_id/_delete'` to delete computed field with `_id`
 
@@ -235,7 +248,7 @@ Response:
 }
 ```
 
-#### Using Kuzzle JS SDK
+**Using Kuzzle JS SDK**
 
 Using the Kuzzle JS SDK, you can call controller actions using the `query`API:
 
