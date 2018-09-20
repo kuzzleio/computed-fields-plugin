@@ -28,7 +28,7 @@ script:
   - npm install && npm run test
 
 after_script:
-  - if [[ ! -z $TRAVIS_PULL_REQUEST ]]; then ./.ci/reporting.sh ; fi;
+  - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then ./.ci/reporting.sh ; fi;
 
 
 
