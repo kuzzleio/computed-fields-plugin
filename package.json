@@ -7,7 +7,7 @@
   "scripts": {
     "test": "npm run --silent lint && npm run functional-testing",
     "lint": "eslint --max-warnings=0 ./lib ./test",
-    "functional-testing": "run-features",
+    "functional-testing": "./run-features",
     "unit-testing": "istanbul cover _mocha"
   },
   "repository": {
