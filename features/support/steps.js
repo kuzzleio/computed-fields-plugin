@@ -13,7 +13,7 @@ Given('an index {string}', function (indexName) {
   this.indexName = indexName
   return this.kuzzle
     .index
-    .create(this.indexName, {refresh: "wait_for"})
+    .create(this.indexName, {refresh: 'wait_for'})
 });
 
 Given('a collection {string} in {string}', function (collectionName, indexName) {
@@ -21,7 +21,7 @@ Given('a collection {string} in {string}', function (collectionName, indexName) 
 
   return this.kuzzle
     .collection
-    .create(indexName, collectionName, {refresh: "wait_for"})
+    .create(indexName, collectionName, {refresh: 'wait_for'})
 });
 
 Given('I create a new computed field {string} as follow:', function (cfName, computedFieldCfg) {
@@ -79,7 +79,7 @@ Then('the list doesn\'t contain computed field {string}', function (cfName) {
 
 When('I create a computed field {string} with name = {string}, index = {string} and collection = {string}',
    function (cfName, name, index, collection) {
-      let cfBody =  {name, index, collection, value: "A fake template"}
+      let cfBody =  {name, index, collection, value: 'A fake template'}
       return this.kuzzle.query(
         {
           controller: 'computed-fields/computedFields',
@@ -101,7 +101,8 @@ Given('I create the following new document with id {string} in index {string} an
 })
 
 When('I get the document with id {string} from index {string} and collection {string}', function (id, index, collection) {
-  return this.kuzzle.document.get(index, collection, id)
+  return this.kuzzle.index.refresh(index)
+  .then(()=> this.kuzzle.document.get(index, collection, id))
   .then(r=>{
     this.documents = {...this.documents, [id]: r._source} 
   })
