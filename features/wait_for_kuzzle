@@ -1,19 +1,23 @@
 #!/bin/bash
+set -e
+
 
 KUZZLE_HOST=localhost
 KUZZLE_PORT=7512
 
 RETRY=10
 
-  curl -s $KUZZLE_HOST:$KUZZLE_PORT   > /dev/null
-while [[ $? != 0 && $RETRY > 0 ]] ; do
-  echo -e "[$RETRY] waiting for Kuzzle Server to be ready..."
-  sleep 5
-  ((RETRY--))
-  curl -s $KUZZLE_HOST:$KUZZLE_PORT > /dev/null
-done
+printf 'Waiting for Kuzzle stack to be up and running'
 
-if [[ $RETRY == 0 ]]
-then
-  exit 1
-fi
+until $(curl --output /dev/null --silent --head --fail http://$KUZZLE_HOST:$KUZZLE_PORT); do
+  printf '.'
+
+  ((RETRY--))
+
+  if [[ $RETRY == 0 ]]
+  then
+    exit 1
+  fi
+
+  sleep 5
+done
