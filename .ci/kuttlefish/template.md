@@ -1,7 +1,8 @@
-## :cucumber: Cucumber Report :cucumber:
+## :cucumber: : Cucumber Report
 
 <br/>
+<br/>
 
-__Check this [link]({{.url}})__
+_Check this [link]({{.url}})_
 
 
