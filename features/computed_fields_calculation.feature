@@ -261,8 +261,75 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
       }
       """
 
-  Scenario: Deleted compute field should no more add computed field in document
+  Scenario: Deleted compute field should no more be inserted in newly created document
+    Given a running instance of Kuzzle
+    And an index "cf-test-index"
+    And a collection "cf-test-collection" in "cf-test-index"
+    And I create a new computed field "A" as follow:
+      """
+      {
+      "name": "myComputedField",
+      "index": "cf-test-index",
+      "collection": "cf-test-collection",
+      "value": "My name is ${forename} ${surname} and I'm ${age} years old"
+      }
+      """
+    And I create the following new document with id 'a-doc-id' in index "cf-test-index" and collection "cf-test-collection":
+      """
+      {
+      "surname": "Romeo",
+      "forename": "Michael",
+      "instrument": "guitar",
+      "age": 50
+      }
+      """
+    And I delete the computed field with id "cf-test-index-cf-test-collection-myComputedField"
+    And I create the following new document with id 'another-doc-id' in index "cf-test-index" and collection "cf-test-collection":
+      """
+      {
+      "surname": "Pinella",
+      "forename": "Michael",
+      "instrument": "keayboard",
+      "age": 49
+      }
+      """
+    When I get the document with id 'another-doc-id' from index "cf-test-index" and collection "cf-test-collection"
+    Then the computed fields for document 'another-doc-id' doesn't contain:
+      """
+      {
+      "myComputedField": ""
+      }
+      """
 
-
-
+  Scenario: Recomputing computed field for a collection shall remove deleted computed fields value from documents
+    Given a running instance of Kuzzle
+    And an index "cf-test-index"
+    And a collection "cf-test-collection" in "cf-test-index"
+    And I create a new computed field "A" as follow:
+      """
+      {
+      "name": "myComputedField",
+      "index": "cf-test-index",
+      "collection": "cf-test-collection",
+      "value": "My name is ${forename} ${surname} and I'm ${age} years old"
+      }
+      """
+    And I create the following new document with id 'a-doc-id' in index "cf-test-index" and collection "cf-test-collection":
+      """
+      {
+      "surname": "Romeo",
+      "forename": "Michael",
+      "instrument": "guitar",
+      "age": 50
+      }
+      """
+    And I delete the computed field with id "cf-test-index-cf-test-collection-myComputedField"
+    And I recompute computed fields for index "cf-test-index" and collection "cf-test-collection"
+    When I get the document with id 'a-doc-id' from index "cf-test-index" and collection "cf-test-collection"
+    Then the computed fields for document 'a-doc-id' doesn't contain:
+      """
+      {
+      "myComputedField": ""
+      }
+      """
 

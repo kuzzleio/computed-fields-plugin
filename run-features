@@ -1,12 +1,16 @@
 #!/bin/bash
-set -e
-
+#set -e
+RES=1
 docker-compose -f ./docker/docker-compose.yml up -d
 
-echo "Waiting for Kuzzle to be up and running...."
+echo "Waiting for Kuzzle to be up and running..."
 ./features/wait_for_kuzzle
+
 echo "Running functional tests..."
 ./node_modules/cucumber/bin/cucumber-js -f json:report/cucumber-report.json
+RES=$?
+echo "Generating HTML report..."
+node report/index.js
 
-
+exit $RES
 

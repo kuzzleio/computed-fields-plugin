@@ -30,26 +30,9 @@ Feature: Computed Fields Plugin: Computed fields management
       "value": "`my name is ${forename} and I'm ${age} years old`"
       }
       """
-    And I delete the computed field with id: "cf-test-index-cf-test-collection-myComputedField"
+    And I delete the computed field with id "cf-test-index-cf-test-collection-myComputedField"
     When I list the computed fields
     And the list doesn't contain computed field "A"
-
-  # Scenario: List computed field
-  #   Given a running instance of Kuzzle
-  #   And an index "cf-test-index"
-  #   And a collection "cf-test-collection" in "cf-test-index"
-  #   And I create a new computed field as follow:
-  #     """"
-  #     {
-  #       "name": "myComputedField",
-  #       "index": "cf-test-index",
-  #       "collection": "cf-test-collection",
-  #       "value": "`my name is ${forename} and I'm ${age} years old`"
-  #     }
-  #     """
-  #   And I delete the computed field with id: "cf-test-index-cf-test-collection-myComputedField"
-  #   When I list the computed fields
-  #   Then the computed field is no more in the list
 
   Scenario: A computed field name is unique in an index/collection
     Given a running instance of Kuzzle
