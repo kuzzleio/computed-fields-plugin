@@ -78,26 +78,27 @@ Then('the list doesn\'t contain computed field {string}', function (cfName) {
 })
 
 When('I create a computed field {string} with name = {string}, index = {string} and collection = {string}',
-   function (cfName, name, index, collection) {
-      let cfBody =  {name, index, collection, value: 'A fake template'}
-      return this.kuzzle.query(
-        {
-          controller: 'computed-fields/computedFields',
-          action: 'create',
-          body: cfBody
-        })
-        .then((res)=> {
-          this.computedFields = {...this.computedFields, ...{[cfName]: res.result._source}}
-          this.computedFieldIDs = {...this.computedFieldIDs, ...{[cfName]: res.result._id}}
-        })
-});
+  function (cfName, name, index, collection) {
+    let cfBody =  {name, index, collection, value: 'A fake template'}
+    return this.kuzzle.query(
+      {
+        controller: 'computed-fields/computedFields',
+        action: 'create',
+        body: cfBody
+      })
+      .then((res)=> {
+        this.computedFields = {...this.computedFields, ...{[cfName]: res.result._source}}
+        this.computedFieldIDs = {...this.computedFieldIDs, ...{[cfName]: res.result._id}}
+      })
+  }
+)
 
 Then('the computed field {string} has the following id: {string}', function (cfName, expectedID) {
   return this.computedFieldIDs[cfName] === expectedID
 });
 
 Given('I create the following new document with id {string} in index {string} and collection {string}:', function (id, index, collection, document) {
-  return this.kuzzle.document.create(index, collection, id, JSON.parse(document))
+  return this.kuzzle.document.create(index, collection, id, JSON.parse(document), {refresh: 'wait_for'})
 })
 
 When('I get the document with id {string} from index {string} and collection {string}', function (id, index, collection) {
