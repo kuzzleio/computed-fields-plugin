@@ -5,5 +5,15 @@
     "no-console": 0,
     "no-new": 0,
     "new-cap": 0
+  },
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
   }
 }

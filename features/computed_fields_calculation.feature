@@ -4,12 +4,10 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
     Given a running instance of Kuzzle
     And an index "cf-test-index"
     And a collection "cf-test-collection" in "cf-test-index"
-    And I create a new computed field "A" as follow:
+    And I create a new computed field in index "cf-test-index" and collection "cf-test-collection" as follow:
       """
       {
       "name": "myComputedField",
-      "index": "cf-test-index",
-      "collection": "cf-test-collection",
       "value": "my name is ${forename} and I'm ${age} years old"
       }
       """
@@ -38,21 +36,17 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
     And a collection "cf-test-collection" in "cf-test-index-1"
     And a collection "cf-test-collection" in "cf-test-index-2"
     And a collection "cf-test-collection" in "cf-test-index-3"
-    And I create a new computed field "A" as follow:
+    And I create a new computed field in index "cf-test-index-1" and collection "cf-test-collection" as follow:
       """
       {
       "name": "myComputedField",
-      "index": "cf-test-index-1",
-      "collection": "cf-test-collection",
       "value": "${forename} plays the ${instrument}"
       }
       """
-    And I create a new computed field "B" as follow:
+    And I create a new computed field in index "cf-test-index-2" and collection "cf-test-collection" as follow:
       """
       {
       "name": "myComputedField",
-      "index": "cf-test-index-2",
-      "collection": "cf-test-collection",
       "value": "${forename} ${surname}"
       }
       """
@@ -82,12 +76,10 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
     Given a running instance of Kuzzle
     And an index "cf-test-index"
     And a collection "cf-test-collection" in "cf-test-index"
-    And I create a new computed field "A" as follow:
+    And I create a new computed field in index "cf-test-index" and collection "cf-test-collection" as follow:
       """
       {
       "name": "myComputedField",
-      "index": "cf-test-index",
-      "collection": "cf-test-collection",
       "value": "${id.forename} ${id.surname} plays the ${instrument} in ${band}"
       }
       """
@@ -116,12 +108,10 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
     Given a running instance of Kuzzle
     And an index "cf-test-index"
     And a collection "cf-test-collection" in "cf-test-index"
-    And I create a new computed field "A" as follow:
+    And I create a new computed field in index "cf-test-index" and collection "cf-test-collection" as follow:
       """
       {
       "name": "myComputedField",
-      "index": "cf-test-index",
-      "collection": "cf-test-collection",
       "value": "My name is ${forename} ${surname} and I'm ${age} years old"
       }
       """
@@ -153,12 +143,10 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
     Given a running instance of Kuzzle
     And an index "cf-test-index"
     And a collection "cf-test-collection" in "cf-test-index"
-    And I create a new computed field "A" as follow:
+    And I create a new computed field in index "cf-test-index" and collection "cf-test-collection" as follow:
       """
       {
       "name": "myComputedField",
-      "index": "cf-test-index",
-      "collection": "cf-test-collection",
       "value": "My name is ${forename} ${surname} and I'm ${age} years old"
       }
       """
@@ -188,12 +176,10 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
     Given a running instance of Kuzzle
     And an index "cf-test-index"
     And a collection "cf-test-collection" in "cf-test-index"
-    And I create a new computed field "A" as follow:
+    And I create a new computed field in index "cf-test-index" and collection "cf-test-collection" as follow:
       """
       {
       "name": "myComputedField",
-      "index": "cf-test-index",
-      "collection": "cf-test-collection",
       "value": "My name is ${forename} ${surname} and I'm ${age} years old"
       }
       """
@@ -225,12 +211,10 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
     Given a running instance of Kuzzle
     And an index "cf-test-index"
     And a collection "cf-test-collection" in "cf-test-index"
-    And I create a new computed field "A" as follow:
+    And I create a new computed field in index "cf-test-index" and collection "cf-test-collection" as follow:
       """
       {
       "name": "myComputedField",
-      "index": "cf-test-index",
-      "collection": "cf-test-collection",
       "value": "My name is ${forename} ${surname} and I'm ${age} years old"
       }
       """
@@ -243,7 +227,7 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
       "age": 50
       }
       """
-    And I update the computed field "A" as follow:
+    And I create a new computed field in index "cf-test-index" and collection "cf-test-collection" as follow:
       """
       {
       "name": "myComputedField",
@@ -265,12 +249,10 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
     Given a running instance of Kuzzle
     And an index "cf-test-index"
     And a collection "cf-test-collection" in "cf-test-index"
-    And I create a new computed field "A" as follow:
+    And I create a new computed field in index "cf-test-index" and collection "cf-test-collection" as follow:
       """
       {
       "name": "myComputedField",
-      "index": "cf-test-index",
-      "collection": "cf-test-collection",
       "value": "My name is ${forename} ${surname} and I'm ${age} years old"
       }
       """
@@ -283,7 +265,7 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
       "age": 50
       }
       """
-    And I delete the computed field with id "cf-test-index-cf-test-collection-myComputedField"
+    And I delete the computed field with name "myComputedField" from index "cf-test-index" and collection "cf-test-collection"
     And I create the following new document with id 'another-doc-id' in index "cf-test-index" and collection "cf-test-collection":
       """
       {
@@ -294,23 +276,16 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
       }
       """
     When I get the document with id 'another-doc-id' from index "cf-test-index" and collection "cf-test-collection"
-    Then the computed fields for document 'another-doc-id' doesn't contain:
-      """
-      {
-      "myComputedField": ""
-      }
-      """
+    Then the computed fields for document 'another-doc-id' doesn't contain "myComputedField"
 
   Scenario: Recomputing computed field for a collection shall remove deleted computed fields value from documents
     Given a running instance of Kuzzle
     And an index "cf-test-index"
     And a collection "cf-test-collection" in "cf-test-index"
-    And I create a new computed field "A" as follow:
+    And I create a new computed field in index "cf-test-index" and collection "cf-test-collection" as follow:
       """
       {
       "name": "myComputedField",
-      "index": "cf-test-index",
-      "collection": "cf-test-collection",
       "value": "My name is ${forename} ${surname} and I'm ${age} years old"
       }
       """
@@ -323,13 +298,8 @@ Feature: Computed Fields Plugin: Calculate computed fields in documents
       "age": 50
       }
       """
-    And I delete the computed field with id "cf-test-index-cf-test-collection-myComputedField"
+    And I delete the computed field with name "myComputedField" from index "cf-test-index" and collection "cf-test-collection"
     And I recompute computed fields for index "cf-test-index" and collection "cf-test-collection"
     When I get the document with id 'a-doc-id' from index "cf-test-index" and collection "cf-test-collection"
-    Then the computed fields for document 'a-doc-id' doesn't contain:
-      """
-      {
-      "myComputedField": ""
-      }
-      """
+    Then the computed fields for document 'a-doc-id' doesn't contain "myComputedField"
 

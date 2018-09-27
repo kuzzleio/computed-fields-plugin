@@ -15,7 +15,7 @@
 
 ## Purpose
 
-The purpose of this plugin is to allow one to create fields that are computed from other fields of a document. e.g. considering the following document:
+This plugin allows creating computed fields from a document's existing fields. For instance, considering the following document:
 
 ```json
 {
@@ -24,9 +24,9 @@ The purpose of this plugin is to allow one to create fields that are computed fr
 }
 ```
 
-you could have a computed field `fullname` defined as `"${name} ${surname}"` and whose value would be `"Michael Romeo"` for previous exemple.
+you could have a computed field `fullname` defined as `"${name} ${surname}"` and whose value would be `"Michael Romeo"`.
 
-The computed fileds are ensted in a `_computedFields` object to avoid collision with document fields, so the final document will be:
+The computed fileds are stored in a `_computedFields` object to avoid collision with document fields, so the final document will be:
 
 ```json
 {
@@ -43,20 +43,16 @@ A computed field is applied to documents in a given `collection` and is defined 
 ```json
 {
   "name": "myComputedField",
-  "index": "myIndex",
-  "collection": "myCollection",
   "value": "Here is my computed field using ${my_document_field} and ${a.nested.field}"
 }
 ```
 
 ## Usage
 
-| Field | Description |
-| -- | -- |
-| `name` | This is the name by which it will be represented in the documents.|
-| `index` | The `index` containing the document we want to apply the computed field to |
-| `collection` | The `collection` containing the document we want to apply the computed field to |
-| `value` | The computed field's `value` is a template string where you can insert document's field values using the `${fieldname}` syntax. Note that you are note limited to field at the root of the document, you can access insert nested property field using the classic `.` syntax: `${my.nested.field}` | 
+| Field   | Description       |
+| ------- | -- |
+| `name`  | This is the name by which it will be represented in the documents.   |
+| `value` | The computed field's `value` is a template string where you can insert document's field values using the `${fieldname}` syntax. Note that you are note limited to field at the root of the document, you can access insert nested property field using the classic `.` syntax: `${my.nested.field}` |
 
 **Note:** To avoid any collision with documents fields, all computed fields are nested in `_computedFields` object.
 
@@ -74,27 +70,25 @@ Once installed, the plugin exposes a new controller: `computedFields` c
 
 The controller has de following actions:
 
-| Action      | Description                                                     |
-| ----------- | --------------------------------------------------------------- |
-| `create`    | Adds or update a computed field to an `index/collection`        |
-| `delete`    | Remove a computed field                                         |
-| `list`      | List computed fields                                            |
-| `recompute` | Recompute all the computed fields of a given `index/collection` |
+| Action      | Description                                                               |
+| ----------- | ------------------------------------------------------------------------- |
+| `create`    | Add or update a computed field to an `index/collection`                   |
+| `delete`    | Remove a computed field from an `index/collection`                        |
+| `list`      | List computed fields of an `index/collection`                             |
+| `recompute` | Recompute computed fields for all documents of a given `index/collection` |
 
 ### Create a computed field
 
 **http**
 
-You can create or update a computed field using a http `POST` on the route: `http+https://kuzzlehost:kuzzleport/computed-fields/`
+You can create or update a computed field sending a http `POST` request to `http+https://<host>:<port>/_plugin/computed-fields/<index>/<collection>`
 
-For exemple:
+For example:
 
 ```sh
-$ curl  localhost:7512/_plugin/computed-fields/ -H "Content-Type: application/json"
+$ curl  localhost:7512/_plugin/computed-fields/myIndex/myCollection -H "Content-Type: application/json"
 -d '{
   "name": "myComputedField",
-  "index": "myIndex",
-  "collection": "myCollection",
   "value": "Here is my computed field using ${my_document_field} and ${a.nested.field}"
 }'
 ```
@@ -108,8 +102,8 @@ Response:
   "error": null,
   "controller": "computed-fields/field",
   "action": "create",
-  "collection": null,
-  "index": null,
+  "collection": "myCollection",
+  "index": "myIndex",
   "volatile": null,
   "result": {
     "_index": "%plugin:computed-fields",
@@ -125,8 +119,6 @@ Response:
     "created": true,
     "_source": {
       "name": "myComputedField",
-      "index": "myIndex",
-      "collection": "myCollection",
       "value": "Here is my computed field using ${my_document_field} and ${a.nested.field}"
     }
   }
@@ -135,10 +127,10 @@ Response:
 
 **Using Kuzzle JS SDK**
 
-Using the Kuzzle JS SDK, you can call controller actions using the `query`API:
+Using the Kuzzle JS SDK, you can call controller actions using the `query` API:
 
 ```javascript
-  kuzzle.query(
+  kuzzle.queryPromise(
     {
       controller: 'computed-fields/computedFields',
       action: 'create',
@@ -153,21 +145,21 @@ Using the Kuzzle JS SDK, you can call controller actions using the `query`API:
 
 ### List computed fields
 
-The `list` action will return a array of computed fields.
+The `list` action will return an array of computed fields for the given `index/collection`.
 
 ```json
 [
-  { "name": "aname", "value": "a template" ... },
-  { "name": "anotherone", "value": "another template" ... }
+  { "name": "aname", "value": "a template" },
+  { "name": "anotherone", "value": "another template" }
 ]
 ```
 
 **http**
 
-Do a `GET` on route `http+https://kuzzlehost:kuzzleport/computed-fields/` to get computed field list
+Send a `GET` request to `http+https://<host>:<port>/_plugin/computed-fields/<index>/<collection>` to get computed fields list
 
 ```sh
-$ curl  localhost:7512/_plugin/computed-fields/
+$ curl  localhost:7512/_plugin/computed-fields/myIndex/myCollection
 ```
 
 Response:
@@ -179,14 +171,12 @@ Response:
   "error": null,
   "controller": "computed-fields/computedFields",
   "action": "list",
-  "collection": null,
-  "index": null,
+  "collection": "myCollection",
+  "index": "myIndex",
   "volatile": null,
   "result": [
     {
       "name": "another-computed-field",
-      "index": "my-index-1",
-      "collection": "my-first-collection",
       "value": "A fake template",
       "_id": "my-index-1-my-first-collection-another-computed-field"
     }
@@ -196,11 +186,11 @@ Response:
 
 **Using Kuzzle JS SDK**
 
-Using the Kuzzle JS SDK, you can call controller actions using the `query`API:
+Using the Kuzzle JS SDK, you can call controller actions using the `query` API:
 
 ```javascript
 kuzzle
-  .query({
+  .queryPromise({
     controller: "computed-fields/computedFields",
     action: "list"
   })
@@ -227,10 +217,10 @@ The `delete` action allow one to remove a computed field.
 
 **http**
 
-Do a `POST` on route `http+https://kuzzlehost:kuzzleport/:_id/_delete'` to delete computed field with `_id`
+Send a `DELETE` request to `http+https://<host>:<port>/_plugin/computed-fields/<index>/<collection>/<name>` to delete computed field with `_id`
 
 ```sh
-$ curl -X POST  localhost:7512/_plugin/computed-fields/my-index-1-my-first-collection-another-computed-field/_delete
+$ curl -X DELETE  localhost:7512/_plugin/computed-fields/my-index-1-my-first-collection-another-computed-field
 ```
 
 Response:
@@ -253,10 +243,9 @@ Response:
 Using the Kuzzle JS SDK, you can call controller actions using the `query`API:
 
 ```javascript
-kuzzle
-  .query({
-    controller: "computed-fields/computedFields",
-    action: "delete",
-    _id: "my-index-1-my-first-collection-another-computed-field"
-  })
+kuzzle.queryPromise({
+  controller: "computed-fields/computedFields",
+  action: "delete",
+  _id: "my-index-1-my-first-collection-another-computed-field"
+});
 ```

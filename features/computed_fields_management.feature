@@ -4,73 +4,70 @@ Feature: Computed Fields Plugin: Computed fields management
     Given a running instance of Kuzzle
     And an index "cf-test-index"
     And a collection "cf-test-collection" in "cf-test-index"
-    And I create a new computed field "A" as follow:
+    And I create a new computed field in index "cf-test-index" and collection "cf-test-collection" as follow:
       """
       {
       "name": "myComputedField",
-      "index": "cf-test-index",
-      "collection": "cf-test-collection",
-      "value": "`my name is ${forename} and I'm ${age} years old`"
+      "value": "my name is ${forename} and I'm ${age} years old"
       }
       """
-    When I list the computed fields
-    Then the list contains computed field "A"
-    And computed field "A" has the following id: "cf-test-index-cf-test-collection-myComputedField"
+    When I list the computed fields of index "cf-test-index" and collection "cf-test-collection"
+    Then the list contains computed field
+      """
+      {
+      "name": "myComputedField",
+      "value": "my name is ${forename} and I'm ${age} years old"
+      }
+      """
 
   Scenario: Delete a computed field
     Given a running instance of Kuzzle
     And an index "cf-test-index"
     And a collection "cf-test-collection" in "cf-test-index"
-    And I create a new computed field "A" as follow:
+    And I create a new computed field in index "cf-test-index" and collection "cf-test-collection" as follow:
       """
       {
       "name": "myComputedField",
-      "index": "cf-test-index",
-      "collection": "cf-test-collection",
-      "value": "`my name is ${forename} and I'm ${age} years old`"
+      "value": "my name is ${forename} and I'm ${age} years old"
       }
       """
-    And I delete the computed field with id "cf-test-index-cf-test-collection-myComputedField"
-    When I list the computed fields
-    And the list doesn't contain computed field "A"
+    And I delete the computed field with name "myComputedField" from index "cf-test-index" and collection "cf-test-collection"
+    When I list the computed fields of index "cf-test-index" and collection "cf-test-collection"
+    Then the list doesn't contain computed field named "myComputedField"
 
-  Scenario: A computed field name is unique in an index/collection
+  Scenario: Replace a computed field 
     Given a running instance of Kuzzle
     And an index "cf-test-index"
     And a collection "cf-test-collection" in "cf-test-index"
-    And I create a new computed field "A" as follow:
-      """"
-      {
-      "name": "myComputedField",
-      "index": "cf-test-index",
-      "collection": "cf-test-collection",
-      "value": "`my name is ${forename} and I'm ${age} years old`"
-      }
-      """
-    And I create a new computed field "B" as follow:
+    And I create a new computed field in index "cf-test-index" and collection "cf-test-collection" as follow:
       """
       {
       "name": "myComputedField",
-      "index": "cf-test-index",
-      "collection": "cf-test-collection",
-      "value": "`I'm ${age} years old`"
+      "value": "my name is ${forename} and I'm ${age} years old"
       }
       """
-    When I list the computed fields
-    Then the list contains computed field "B"
-    And the list doesn't contain computed field "A"
-
-  Scenario Outline: A computed field shall be uniquelly identified by the tuple (index, collection, name)
-    Given a running instance of Kuzzle
-    When I create a computed field 'myCF' with name = "<name>", index = "<index>" and collection = "<collection>"
-    Then the computed field 'myCF' has the following id: "<index>-<collection>-<name>"
-    Examples:
-      | index      | collection          | name                   |
-      | my-index-1 | my-first-collection | a-computed-field       |
-      | my-index-1 | my-secon-collection | a-computed-field       |
-      | my-index-2 | my-first-collection | a-computed-field       |
-      | my-index-1 | my-first-collection | another-computed-field |
-
+    And I create a new computed field in index "cf-test-index" and collection "cf-test-collection" as follow:
+      """
+      {
+      "name": "myComputedField",
+      "value": "I'm ${age} years old"
+      }
+      """
+    When I list the computed fields of index "cf-test-index" and collection "cf-test-collection"
+    Then the list contains computed field
+      """
+      {
+      "name": "myComputedField",
+      "value": "I'm ${age} years old"
+      }
+      """
+    And the list doesn't contain computed field
+      """
+      {
+      "name": "myComputedField",
+      "value": "my name is ${forename} and I'm ${age} years old"
+      }
+      """
 
 
 
