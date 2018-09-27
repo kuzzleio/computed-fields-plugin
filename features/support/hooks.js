@@ -22,7 +22,7 @@ Before(function () {
     .then(() => {
       // reset computed field plugin configuration
       return this.kuzzle.query({
-        controller: 'computed-fields/computedFields',
+        controller: 'computed-fields/admin',
         action: 'reset'
       })
     })

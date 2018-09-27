@@ -194,11 +194,11 @@ Given('I update the computed field {string} as follow:', function (cfName, compu
     }
   }
   return this.kuzzle.query({
-      controller: 'computed-fields/computedFields',
-      action: 'create',
-      body: this.computedFields[cfName]
-    })
-    .then(r => this.attach(JSON.stringify(r, undefined, 2)))
+    controller: 'computed-fields/computedFields',
+    action: 'create',
+    body: this.computedFields[cfName]
+  })
+  .then(r => this.attach(JSON.stringify(r, undefined, 2)))
 })
 
 
@@ -221,4 +221,15 @@ Given('I delete the computed field with name {string} from index {string} and co
     index, 
     collection
   })
+})
+
+Given('I reset the computed-fields plugin', function () {
+  return this.kuzzle.query({
+    controller: 'computed-fields/admin',
+    action: 'reset'
+  })
+})
+
+Then('the list is empty', function () {
+  return this.result.length === 0
 })
