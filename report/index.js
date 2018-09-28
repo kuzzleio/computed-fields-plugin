@@ -1,7 +1,7 @@
-var reporter = require('cucumber-html-reporter');
+const reporter = require('cucumber-html-reporter');
 const {Kuzzle} = require('kuzzle-sdk')
 
-var options = {
+const options = {
   theme: 'bootstrap',
   jsonFile: 'report/cucumber-report.json',
   output: 'report/cucumber-report.html',
