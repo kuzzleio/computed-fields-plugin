@@ -240,6 +240,7 @@ Given('I recompute computed fields for index {string} and collection {string} us
   return rp({
     uri:`http://${this.host}:${this.port}/_plugin/computed-fields/${index}/${collection}`,
     method:'PATCH',
+    json:true
   })
   .then(r => this.attach(JSON.stringify(r, undefined, 2)))
 })
@@ -257,6 +258,7 @@ Given('I delete the computed field with name {string} from index {string} and co
   return rp({
     uri:`http://${this.host}:${this.port}/_plugin/computed-fields/${index}/${collection}/${name}`,
     method:'DELETE',
+    json:true
   })
   .then(r => this.attach(JSON.stringify(r, undefined, 2)))
 })

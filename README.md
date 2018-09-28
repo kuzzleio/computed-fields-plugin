@@ -217,10 +217,10 @@ The `delete` action allow one to remove a computed field.
 
 **http**
 
-Send a `DELETE` request to `http+https://<host>:<port>/_plugin/computed-fields/<index>/<collection>/<name>` to delete computed field with `_id`
+Send a `DELETE` request to `http+https://<host>:<port>/_plugin/computed-fields/<index>/<collection>/<name>` to delete computed field named \<name> 
 
 ```sh
-$ curl -X DELETE  localhost:7512/_plugin/computed-fields/my-index-1-my-first-collection-another-computed-field
+$ curl -X DELETE  localhost:7512/_plugin/computed-fields/my-index/my-first-collection/another-computed-field
 ```
 
 Response:
@@ -232,8 +232,8 @@ Response:
   "error": null,
   "controller": "computed-fields/computedFields",
   "action": "delete",
-  "collection": null,
-  "index": null,
+  "collection": "my-collection",
+  "index": "my-index",
   "volatile": null
 }
 ```
