@@ -7,6 +7,7 @@ var options = {
   output: 'report/cucumber-report.html',
   reportSuiteAsScenarios: true,
   launchReport: true,
+  columnLayout: 1,
   metadata: {
   }
 };

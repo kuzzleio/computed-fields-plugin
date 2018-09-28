@@ -1,11 +1,13 @@
 'use strict'
-var _ = require('lodash');
+var _ = require('lodash')
+
 
 const {
   Given,
   When,
   Then
-} = require('cucumber')
+} = require('cucumber'),
+  rp = require('request-promise')
 
 Given(/a running instance of Kuzzle/, function () {
   return Promise.resolve()
@@ -52,6 +54,39 @@ Given('I create a new computed field in index {string} and collection {string} a
     .then(r => this.attach(JSON.stringify(r, undefined, 2)))
   }
 )
+
+// @http
+Given('I create a new computed field in index {string} and collection {string} using HTTP API as follow:',
+  function (index, collection, computedFieldCfg) {
+    computedFieldCfg = JSON.parse(computedFieldCfg)
+    let cfName = computedFieldCfg.name
+    this.computedFields = { ...this.computedFields,
+      ...{
+        [cfName]: computedFieldCfg
+      }
+    }
+    return rp({
+      uri:`http://${this.host}:${this.port}/_plugin/computed-fields/${index}/${collection}`,
+      method:'POST',
+      body: computedFieldCfg,
+      json:true
+    })
+    .then(r => this.attach(JSON.stringify(r, undefined, 2)))
+  }
+)
+
+When('I list the computed fields of index {string} and collection {string} using HTTP API', function (index, collection) {
+
+  return rp({
+    uri:`http://${this.host}:${this.port}/_plugin/computed-fields/${index}/${collection}`,
+    method:'GET',
+    json:true
+  })
+  .then((r) => {
+    this.result = r.result
+    this.attach(JSON.stringify(r, undefined, 2))
+  })
+})
 
 When('I list the computed fields of index {string} and collection {string}', function (index, collection) {
 
@@ -201,6 +236,13 @@ Given('I update the computed field {string} as follow:', function (cfName, compu
   .then(r => this.attach(JSON.stringify(r, undefined, 2)))
 })
 
+Given('I recompute computed fields for index {string} and collection {string} using HTTP API', function (index, collection) {
+  return rp({
+    uri:`http://${this.host}:${this.port}/_plugin/computed-fields/${index}/${collection}`,
+    method:'PATCH',
+  })
+  .then(r => this.attach(JSON.stringify(r, undefined, 2)))
+})
 
 Given('I recompute computed fields for index {string} and collection {string}', function (index, collection) {
   return this.kuzzle.query({
@@ -209,6 +251,14 @@ Given('I recompute computed fields for index {string} and collection {string}', 
     index,
     collection
   })
+})
+
+Given('I delete the computed field with name {string} from index {string} and collection {string} using HTTP API', function (name, index, collection) {
+  return rp({
+    uri:`http://${this.host}:${this.port}/_plugin/computed-fields/${index}/${collection}/${name}`,
+    method:'DELETE',
+  })
+  .then(r => this.attach(JSON.stringify(r, undefined, 2)))
 })
 
 Given('I delete the computed field with name {string} from index {string} and collection {string}', function (name, index, collection) {
@@ -232,4 +282,8 @@ Given('I reset the computed-fields plugin', function () {
 
 Then('the list is empty', function () {
   return this.result.length === 0
+})
+
+Then('the list contains only {int} computed field named {string}', function (length, name) {
+  return this.result.length === length && this.result[0].name === name
 })
