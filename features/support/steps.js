@@ -1,13 +1,8 @@
 'use strict'
-var _ = require('lodash')
-
-
-const {
-  Given,
-  When,
-  Then
-} = require('cucumber'),
-  rp = require('request-promise')
+const 
+  { Given, When, Then } = require('cucumber'),
+  rp = require('request-promise'),
+  _ = require('lodash')
 
 Given(/a running instance of Kuzzle/, function () {
   return Promise.resolve()
@@ -21,7 +16,6 @@ Given('an index {string}', function (indexName) {
       refresh: 'wait_for'
     })
     .then(r => this.attach(JSON.stringify(r, undefined, 2)))
-
 });
 
 Given('a collection {string} in {string}', function (collectionName, indexName) {
@@ -38,7 +32,7 @@ Given('a collection {string} in {string}', function (collectionName, indexName) 
 Given('I create a new computed field in index {string} and collection {string} as follow:',
   function (index, collection, computedFieldCfg) {
     computedFieldCfg = JSON.parse(computedFieldCfg)
-    let cfName = computedFieldCfg.name
+    const cfName = computedFieldCfg.name
     this.computedFields = { ...this.computedFields,
       ...{
         [cfName]: computedFieldCfg
@@ -59,7 +53,7 @@ Given('I create a new computed field in index {string} and collection {string} a
 Given('I create a new computed field in index {string} and collection {string} using HTTP API as follow:',
   function (index, collection, computedFieldCfg) {
     computedFieldCfg = JSON.parse(computedFieldCfg)
-    let cfName = computedFieldCfg.name
+    const cfName = computedFieldCfg.name
     this.computedFields = { ...this.computedFields,
       ...{
         [cfName]: computedFieldCfg
@@ -103,7 +97,7 @@ When('I list the computed fields of index {string} and collection {string}', fun
 })
 
 Then('the list contains computed field', function (computedField) {
-  let cf = this.result.find((e) => _.isMatch(e, JSON.parse(computedField)))
+  const cf = this.result.find((e) => _.isMatch(e, JSON.parse(computedField)))
   if (typeof cf !== 'undefined') {
     return Promise.resolve()
   }
@@ -111,7 +105,7 @@ Then('the list contains computed field', function (computedField) {
 })
 
 Then('computed field {string} has the following id: {string}', function (cfName, computedFieldID) {
-  let cf = this.result.find((e) => _.isMatch(e, this.computedFields[cfName]))
+  const cf = this.result.find((e) => _.isMatch(e, this.computedFields[cfName]))
   if (cf._id !== computedFieldID) {
     return Promise.reject(`Created computed id doesn't have the expected value: "${computedFieldID}"`)
   }
@@ -135,7 +129,7 @@ Then('the list doesn\'t contain computed field named {string}', function (cfName
 
 When('I create a computed field {string} with name = {string}, index = {string} and collection = {string}',
   function (cfName, name, index, collection) {
-    let cfBody = {
+    const cfBody = {
       name,
       index,
       collection,
