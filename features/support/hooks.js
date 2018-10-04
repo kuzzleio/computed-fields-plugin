@@ -1,53 +1,35 @@
-const
-  {
-    BeforeAll,
-    After
-  } = require('cucumber'),
-  Kuzzle = require('kuzzle-sdk'),
-  KWorld = require('./world'),
-  {
-    spawnSync
-  } = require('child_process');
+'use strict'
 
-BeforeAll(function(callback) {
-  let maxTries = 10;
-  let connected = false;
-  let curl;
+const 
+  { After, Before } = require('cucumber'), 
+  { Kuzzle } = require('kuzzle-sdk')
 
-  const world = new KWorld();
-
-  while (! connected && maxTries > 0) {
-    curl = spawnSync('curl', [`${world.host}:${world.port}`]);
-
-    if (curl.status == 0) {
-      connected = true;
-    } else {
-      console.log(`[${maxTries}] Waiting for kuzzle..`);
-      maxTries -= 1;
-      spawnSync('sleep', ['5']);
-    }
-  }
-
-  if (! connected) {
-    callback(new Error("Unable to start docker-compose stack"));
-  }
-
-  const kuzzle = new Kuzzle(world.host, { port: world.port }, (error, result) => {
-    if (error) {
-      callback(error);
-    }
-     
-    kuzzle
-     .createIndexPromise('test-index')
-     .then(() => kuzzle.collection('test-collection', 'test-index').createPromise())
-     .then(() => callback())
-     .catch(err => callback(err))
-     .finally(() => kuzzle.disconnect());
+Before(function () {
+  this.kuzzle = new Kuzzle('websocket', {
+    host: this.host,
+    port: this.port
   })
 
-  After(function (callback) {
-    if (this.kuzzle && typeof this.kuzzle.disconnect == 'function') {
-      this.kuzzle.disconnect();
-    }
-  });
-});
+  return this.kuzzle.connect()
+    .catch(e => console.log(e))
+    .then(() => this.kuzzle.query({
+      // Reset kuzzle database
+      controller: 'admin',
+      action: 'resetDatabase',
+      refresh: 'wait_for'
+    }))
+    .then(() => new Promise(resolve => setTimeout(resolve, 1000))) // To avoid a bug in admin controller where it would try to find aan index that already have been deleted
+    .then(() => {
+      // reset computed field plugin configuration
+      return this.kuzzle.query({
+        controller: 'computed-fields/admin',
+        action: 'reset'
+      })
+    })
+})
+
+After(function () {
+  if (this.kuzzle && typeof this.kuzzle.disconnect === 'function') {
+    this.kuzzle.disconnect();
+  }
+})

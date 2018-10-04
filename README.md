@@ -1,75 +1,251 @@
-# kuzzle-core-plugin-boilerplate
+# kuzzle computed-fields plugin
 
-Here, you'll find the boilerplate to start coding a new [Kuzzle Core Plugin](http://docs.kuzzle.io/guide/essentials/plugins/). A Core Plugin allows you to
+<!-- TOC -->
 
-* [listen asynchronously](http://docs.kuzzle.io/plugins-reference/plugins-features/adding-hooks), and perform operations that depend on data-related events;
-* [listen synchronously](http://docs.kuzzle.io/plugins-reference/plugins-features/adding-pipes), and approve, modify and/or reject data-related queries;
-* [add a controller route](http://docs.kuzzle.io/plugins-reference/plugins-features/adding-controllers) to expose new actions to the API;
-* [add an authentication strategy](http://docs.kuzzle.io/plugins-reference/plugins-features/adding-authentication-strategy) to Kuzzle.
+- [kuzzle computed-fields plugin](#kuzzle-computed-fields-plugin)
+  - [Purpose](#purpose)
+  - [Usage](#usage)
+  - [Installing the plugin](#installing-the-plugin)
+  - [Computed fields management](#computed-fields-management)
+    - [Create a computed field](#create-a-computed-field)
+    - [List computed fields](#list-computed-fields)
+    - [Delete a computed field](#delete-a-computed-field)
 
-The boilerplate demonstrates each feature of a Core Plugin.
+<!-- /TOC -->
 
-## Plugin development
+## Purpose
 
-This plugin is useful only if you use it as the starting point of your work. It's a boilerplate.
+This plugin allows creating computed fields from a document's existing fields. For instance, considering the following document:
 
-### On an existing Kuzzle
+```json
+{
+  "name": "Michael",
+  "surname": "Romeo"
+}
+```
+
+you could have a computed field `fullname` defined as `"${name} ${surname}"` and whose value would be `"Michael Romeo"`.
+
+The computed fileds are stored in a `_computedFields` object to avoid collision with document fields, so the final document will be:
+
+```json
+{
+  "name": "Michael",
+  "surname": "Romeo",
+  "_computedFields": {
+    "fullname": "Michael Romeo"
+  }
+}
+```
+
+A computed field is applied to documents in a given `collection` and is defined as follow:
+
+```json
+{
+  "name": "myComputedField",
+  "value": "Here is my computed field using ${my_document_field} and ${a.nested.field}"
+}
+```
+
+## Usage
+
+| Field   | Description       |
+| ------- | -- |
+| `name`  | This is the name by which it will be represented in the documents.   |
+| `value` | The computed field's `value` is a template string where you can insert document's field values using the `${fieldname}` syntax. Note that you are note limited to field at the root of the document, you can access insert nested property field using the classic `.` syntax: `${my.nested.field}` |
+
+**Note:** To avoid any collision with documents fields, all computed fields are nested in `_computedFields` object.
+
+## Installing the plugin
 
 Clone this repository locally and make it accessible from the `plugins/enabled` directory relative to the Kuzzle installation directory. A common practice is to put the code of the plugin in `plugins/available` and create a symbolic link to it in `plugins/enabled`.
 
-**Note.** If you are running Kuzzle within a Docker container, you will need to mount the local plugin installation directory as a volume in the container.
+**Note:** If you are running Kuzzle within a Docker container, you will need to mount the local plugin installation directory as a volume in the container.
 
 Please refer to the Guide for further instructions on [how to install Kuzzle plugins](http://docs.kuzzle.io/guide/essentials/plugins/#managing-plugins).
 
-### On a pristine Kuzzle stack
+## Computed fields management
 
-You can use the `docker-compose.yml` file included in this repository to start a development-oriented stack to help you creating your custom Kuzzle Core plugin.
+Once installed, the plugin exposes a new controller: `computedFields` c
 
-Clone this repository locally and type:
+The controller has de following actions:
 
-```bash
-$ docker-compose -f docker/docker-compose.yml up
+| Action      | Description                                                               |
+| ----------- | ------------------------------------------------------------------------- |
+| `create`    | Add or update a computed field to an `index/collection`                   |
+| `delete`    | Remove a computed field from an `index/collection`                        |
+| `list`      | List computed fields of an `index/collection`                             |
+| `recompute` | Recompute computed fields for all documents of a given `index/collection` |
+
+### Create a computed field
+
+**http**
+
+You can create or update a computed field sending a http `POST` request to `http+https://<host>:<port>/_plugin/computed-fields/<index>/<collection>`
+
+For example:
+
+```sh
+$ curl  localhost:7512/_plugin/computed-fields/myIndex/myCollection -H "Content-Type: application/json"
+-d '{
+  "name": "myComputedField",
+  "value": "Here is my computed field using ${my_document_field} and ${a.nested.field}"
+}'
 ```
 
-This command will start a Kuzzle stack with this plugin enabled. To make development more confortable, a watcher will also be activated, restarting Kuzzle every time a modification is detected.
+Response:
 
-#### Working on a different Kuzzle tag
-
-You can choose to work on the Kuzzle development branch by defining the following environment variables before launching `docker-compose`:
-
-```bash
-$ export KUZZLE_DOCKER_TAG=1.2.13
-$ docker-compose -f docker/docker-compose.yml up
-```
-
-These environment variables enable you to specify any existing build tag available on [Docker Hub](https://hub.docker.com/r/kuzzleio/kuzzle/tags/).
-
-#### Customizing the plugin instance name
-
-You may like to name your plugin differently than the name of this repo. To do so, rename the local directory of the repo and define the following environment variable before launching the development stack:
-
-```bash
-$ export PLUGIN_NAME=my-awesome-plugin
-$ docker-compose -f docker/docker-compose.yml up
-```
-
-## `manifest.json` file
-
-`manifest.json` are here to describe usage of your plugin:
-
-```js
+```json
 {
-  /**
-   * This is metadata to describe your plugin
-   */
-  "name": "name-of-your-plugin",
-  "version": "2.3.1",
-
- /**
-  * Define which core version this plugin is designed for.
-  * Use semver notation to born Kuzzle version this plugins supports
-  * - if set, and installation requirement is not meet, an error will be thrown and Kuzzle will not start
-  */
-  "kuzzleVersion": "^1.2.x"
+  "requestId": "f0cef431-a642-41ba-98b5-c2f407f10bd1",
+  "status": 200,
+  "error": null,
+  "controller": "computed-fields/field",
+  "action": "create",
+  "collection": "myCollection",
+  "index": "myIndex",
+  "volatile": null,
+  "result": {
+    "_index": "%plugin:computed-fields",
+    "_type": "computedFields",
+    "_id": "myIndex-myCollection-myComputedField",
+    "_version": 1,
+    "result": "created",
+    "_shards": {
+      "total": 2,
+      "successful": 1,
+      "failed": 0
+    },
+    "created": true,
+    "_source": {
+      "name": "myComputedField",
+      "value": "Here is my computed field using ${my_document_field} and ${a.nested.field}"
+    }
+  }
 }
+```
+
+**Using Kuzzle JS SDK**
+
+Using the Kuzzle JS SDK, you can call controller actions using the `query` API:
+
+```javascript
+  kuzzle.queryPromise(
+    {
+      controller: 'computed-fields/computedFields',
+      action: 'create',
+      body: {
+      name: "myComputedField",
+      index: "myIndex",
+      collection: "myCollection",
+      value: "Here is my computed field using ${my_document_field} and ${a.nested.field}"
+    }
+  )
+```
+
+### List computed fields
+
+The `list` action will return an array of computed fields for the given `index/collection`.
+
+```json
+[
+  { "name": "aname", "value": "a template" },
+  { "name": "anotherone", "value": "another template" }
+]
+```
+
+**http**
+
+Send a `GET` request to `http+https://<host>:<port>/_plugin/computed-fields/<index>/<collection>` to get computed fields list
+
+```sh
+$ curl  localhost:7512/_plugin/computed-fields/myIndex/myCollection
+```
+
+Response:
+
+```json
+{
+  "requestId": "43af0e90-7e4b-40d7-bae2-665a999e3152",
+  "status": 200,
+  "error": null,
+  "controller": "computed-fields/computedFields",
+  "action": "list",
+  "collection": "myCollection",
+  "index": "myIndex",
+  "volatile": null,
+  "result": [
+    {
+      "name": "another-computed-field",
+      "value": "A fake template",
+      "_id": "my-index-1-my-first-collection-another-computed-field"
+    }
+  ]
+}
+```
+
+**Using Kuzzle JS SDK**
+
+Using the Kuzzle JS SDK, you can call controller actions using the `query` API:
+
+```javascript
+kuzzle
+  .queryPromise({
+    controller: "computed-fields/computedFields",
+    action: "list"
+  })
+  .then(r => console.log(r.result));
+```
+
+Outputs:
+
+```sh
+[
+  {
+    "name": "another-computed-field",
+    "index": "my-index-1",
+    "collection": "my-first-collection",
+    "value": "A fake template",
+    "_id": "my-index-1-my-first-collection-another-computed-field"
+  }
+]
+```
+
+### Delete a computed field
+
+The `delete` action allow one to remove a computed field.
+
+**http**
+
+Send a `DELETE` request to `http+https://<host>:<port>/_plugin/computed-fields/<index>/<collection>/<name>` to delete computed field named \<name> 
+
+```sh
+$ curl -X DELETE  localhost:7512/_plugin/computed-fields/my-index/my-first-collection/another-computed-field
+```
+
+Response:
+
+```json
+{
+  "requestId": "ab711c47-62f4-4bd0-b127-3e8012ca1135",
+  "status": 200,
+  "error": null,
+  "controller": "computed-fields/computedFields",
+  "action": "delete",
+  "collection": "my-collection",
+  "index": "my-index",
+  "volatile": null
+}
+```
+
+**Using Kuzzle JS SDK**
+
+Using the Kuzzle JS SDK, you can call controller actions using the `query`API:
+
+```javascript
+kuzzle.queryPromise({
+  controller: "computed-fields/computedFields",
+  action: "delete",
+  _id: "my-index-1-my-first-collection-another-computed-field"
+});
 ```

@@ -1,13 +1,14 @@
-const
-  { setWorldConstructor } = require('cucumber');
+const { setWorldConstructor } = require('cucumber');
 
-class KWorld {
-  constructor (config) {
+class KuzzleWorld {
+  constructor (attach, parameters) {
+    this.attach = attach.attach
+    this.parameters = parameters
     this.host = process.env.KUZZLE_HOST || 'localhost'
     this.port = process.env.KUZZLE_PORT || '7512'
   }
 }
 
-setWorldConstructor(KWorld);
+setWorldConstructor(KuzzleWorld);
 
-module.exports = KWorld;
+module.exports = KuzzleWorld

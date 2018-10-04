@@ -3,8 +3,8 @@
     "name": "KuzzleServer",
     "script": "bin/kuzzle",
     "args": ["start"],
-    "node_args": "--inspect",
+    "node_args": "--inspect=0.0.0.0:9229",
     "watch": ["plugins/enabled"],
-    "ignore_watch" : ["node_modules", "plugins/enabled/**/.git", "plugins/enabled/**/features/*"]
+    "ignore_watch" : ["plugins/enabled/*/report", "plugins/enabled/**/.git", "plugins/enabled/**/features/*"]
   }]
 }

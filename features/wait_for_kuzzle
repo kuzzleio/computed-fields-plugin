@@ -1,0 +1,23 @@
+#!/bin/bash
+set -e
+
+
+KUZZLE_HOST=localhost
+KUZZLE_PORT=7512
+
+RETRY=10
+
+printf 'Waiting for Kuzzle stack to be up and running'
+
+until $(curl --output /dev/null --silent --head --fail http://$KUZZLE_HOST:$KUZZLE_PORT); do
+  printf '.'
+
+  ((RETRY--))
+
+  if [[ $RETRY == 0 ]]
+  then
+    exit 1
+  fi
+
+  sleep 5
+done
