@@ -1,5 +1,5 @@
 'use strict';
-const 
+const
   { Given, When, Then } = require('cucumber'),
   rp = require('request-promise'),
   _ = require('lodash');
@@ -165,7 +165,7 @@ Then('the computed field {string} has the following id: {string}', function (cfN
 });
 
 Given('I create the following new document with id {string} in index {string} and collection {string}:', function (id, index, collection, document) {
-  return this.kuzzle.document.create(index, collection, id, JSON.parse(document), {
+  return this.kuzzle.document.create(index, collection, JSON.parse(document), id, {
     refresh: 'wait_for'
   })
   .then(r => this.attach(JSON.stringify(r, undefined, 2)));
@@ -268,7 +268,7 @@ Given('I delete the computed field with name {string} from index {string} and co
     body: {
       name
     },
-    index, 
+    index,
     collection
   });
 });
