@@ -17,6 +17,7 @@ Before(function () {
       action: 'resetDatabase',
       refresh: 'wait_for'
     }))
+    .then(() => new Promise(resolve => setTimeout(resolve, 1000))) // To avoid a bug in admin controller where it would try to find aan index that already have been deleted
     .then(() => {
       // reset computed field plugin configuration
       return this.kuzzle.query({
