@@ -1,14 +1,13 @@
 'use strict'
 
-const 
-  { After, Before } = require('cucumber'), 
-  { Kuzzle } = require('kuzzle-sdk')
+const
+  { After, Before } = require('cucumber'),
+  { Kuzzle, WebSocket } = require('kuzzle-sdk')
 
 Before(function () {
-  this.kuzzle = new Kuzzle('websocket', {
-    host: this.host,
-    port: this.port
-  })
+  this.kuzzle = new Kuzzle(
+    new WebSocket(this.host, { port: this.port })
+  )
 
   return this.kuzzle.connect()
     .catch(e => console.log(e))

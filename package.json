@@ -1,7 +1,7 @@
 {
   "name": "computed-fields",
   "author": "The Kuzzle Team <support@kuzzle.io>",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Kuzzle plugin to create fields that are computed from other fields",
   "main": "lib/index.js",
   "scripts": {
@@ -28,12 +28,12 @@
     "cucumber-html-reporter": "^4.0.4",
     "eslint": "^3.6.1",
     "istanbul": "^0.4.5",
-    "kuzzle-sdk": "git+https://github.com/kuzzleio/sdk-javascript#6-dev",
     "mocha": "^3.1.0",
     "nexpect": "^0.5.0",
     "should": "^11.1.0",
     "should-sinon": "0.0.5",
     "lodash": "^4.17.11",
+    "kuzzle-sdk": "^6.0.0",
     "sinon": "^2.3.2"
   },
   "dependencies": {
